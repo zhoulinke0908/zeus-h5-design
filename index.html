@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeus H5 设计稿预览</title>
+    <style>
+        :root { --primary: #F19871; --primary-dark: #E8865A; --text: #1D1D1F; --text-secondary: #86868B; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(180deg, #FFF8F5, #F5F5F7);
+            min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 60px 20px;
+        }
+        h1 {
+            font-size: 28px; color: var(--text); margin-bottom: 8px; font-weight: 700;
+        }
+        .sub {
+            font-size: 14px; color: var(--text-secondary); margin-bottom: 36px;
+        }
+        .cards {
+            display: flex; flex-wrap: wrap; gap: 16px;
+            justify-content: center; max-width: 520px;
+        }
+        .card {
+            display: block;
+            width: 240px; padding: 28px 24px;
+            background: #fff; border-radius: 16px;
+            text-decoration: none;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+        .card-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 14px;
+        }
+        .card-icon svg { width: 24px; height: 24px; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+        .ci-login { background: #FFF0EA; }
+        .ci-login svg { stroke: #F19871; }
+        .ci-settings { background: #F0F0FF; }
+        .ci-settings svg { stroke: #7C6FF7; }
+        .ci-profile { background: #FFF7E6; }
+        .ci-profile svg { stroke: #F5A623; }
+
+        .card-name { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+        .card-desc { font-size: 13px; color: var(--text-secondary); }
+        .qr-section { margin-top: 40px; text-align: center; }
+        .qr-section p { font-size: 12px; color: #C7C7CC; }
+    </style>
+</head>
+<body>
+    <h1>Zeus H5 设计稿</h1>
+    <p class="sub">移动端适配，点击卡片打开预览</p>
+    <div class="cards">
+        <a class="card" href="login.html">
+            <div class="card-icon ci-login">
+                <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            </div>
+            <div class="card-name">登录 / 注册</div>
+            <div class="card-desc">密码登录 · 验证码登录 · 注册</div>
+        </a>
+        <a class="card" href="mySettings.html">
+            <div class="card-icon ci-settings">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </div>
+            <div class="card-name">设置</div>
+            <div class="card-desc">修改昵称 · 手机号 · 密码</div>
+        </a>
+        <a class="card" href="my.html">
+            <div class="card-icon ci-profile">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="card-name">我的</div>
+            <div class="card-desc">个人主页 · 菜单 · 导航</div>
+        </a>
+    </div>
+    <div class="qr-section"><p>移动端请在手机浏览器打开</p></div>
+</body>
+</html>

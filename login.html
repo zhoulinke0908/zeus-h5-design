@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="x5-orientation" content="portrait">
+    <meta name="x5-fullscreen" content="true">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>Zeus - 登录/注册</title>
+    <style>
+        :root {
+            --primary: #F19871;
+            --primary-dark: #E8865A;
+            --primary-light: #FFF0EA;
+            --primary-ghost: #FFF8F5;
+            --text: #2D2D2D;
+            --text-secondary: #8E8E93;
+            --text-placeholder: #C7C7CC;
+            --border: #E8E8ED;
+            --bg: #F9F9FB;
+            --white: #fff;
+            --error: #FF4D4F;
+            --success: #52C41A;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #FFF8F5 0%, #FFFFFF 40%);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding: 0 0 60px;
+            animation: pageIn 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        @keyframes pageIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ======== Logo ======== */
+        .logo-area {
+            padding: 16px 0 0;
+            text-align: center;
+        }
+        .logo-area img {
+            width: 72%;
+            max-width: 300px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* ======== Tabs ======== */
+        .tab-bar {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            padding: 12px 36px 0;
+        }
+        .tab-item {
+            flex: none;
+            padding: 12px 32px;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+            transition: color 0.3s;
+            letter-spacing: 0.5px;
+        }
+        .tab-item::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            border-radius: 3px;
+            background: var(--primary);
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tab-item.active {
+            color: var(--text);
+        }
+        .tab-item.active::before {
+            width: 28px;
+        }
+
+        /* ======== Form Card ======== */
+        .form-card {
+            margin: 20px 32px 0;
+            background: var(--white);
+            border-radius: 20px;
+            padding: 28px 24px 24px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        /* ======== Login Mode Switch ======== */
+        .login-mode {
+            animation: modeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes modeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ======== Inputs ======== */
+        .field-group {
+            margin-bottom: 18px;
+        }
+        .field-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            padding-left: 4px;
+            letter-spacing: 0.3px;
+        }
+        .field-box {
+            display: flex;
+            align-items: center;
+            background: var(--bg);
+            border: 1.5px solid transparent;
+            border-radius: 12px;
+            padding: 0 14px;
+            transition: all 0.25s;
+            gap: 6px;
+        }
+        .field-box:focus-within {
+            background: var(--primary-ghost);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(241,152,113,0.1);
+        }
+        .field-box.error {
+            border-color: var(--error);
+            background: #FFF5F5;
+        }
+        .field-input {
+            flex: 1;
+            height: 50px;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            color: var(--text);
+            outline: none;
+            font-family: inherit;
+            letter-spacing: 0.3px;
+            caret-color: var(--primary);
+        }
+        .field-input::placeholder { color: var(--text-placeholder); }
+        .field-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            opacity: 0.35;
+        }
+        .field-icon svg { width: 20px; height: 20px; stroke: var(--text-secondary); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .field-box:focus-within .field-icon { opacity: 0.7; }
+        .field-box:focus-within .field-icon svg { stroke: var(--primary); }
+
+        .pwd-eye {
+            width: 36px; height: 36px;
+            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0.3;
+            transition: opacity 0.2s;
+        }
+        .pwd-eye:hover { opacity: 0.6; }
+        .pwd-eye svg { width: 20px; height: 20px; stroke: var(--text-secondary); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        .field-error {
+            font-size: 12px;
+            color: var(--error);
+            padding: 5px 4px 0;
+            display: none;
+            animation: shakeX 0.35s ease;
+        }
+        .field-error.show { display: block; }
+        @keyframes shakeX {
+            0%,100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* ======== SMS Row ======== */
+        .sms-field-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sms-field-box .field-box { flex: 1; min-width: 0; }
+        .sms-btn {
+            flex-shrink: 0;
+            height: 50px;
+            padding: 0 12px;
+            border: 1.5px solid var(--primary);
+            border-radius: 12px;
+            background: transparent;
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.25s;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+        .sms-btn:active { background: var(--primary-light); transform: scale(0.96); }
+        .sms-btn.counting {
+            border-color: var(--border);
+            color: var(--text-placeholder);
+            cursor: not-allowed;
+        }
+        .sms-btn.counting:active { background: transparent; transform: none; }
+
+        /* ======== Slider ======== */
+        .slider-wrap {
+            margin-top: 30px;
+        }
+        .slider-track {
+            position: relative;
+            width: 100%;
+            height: 52px;
+            background: var(--bg);
+            border-radius: 26px;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            border: 1.5px solid var(--border);
+        }
+        .slider-track.active { border-color: var(--primary); }
+        .slider-track.success {
+            border-color: var(--success);
+            background: #F0FFF4;
+        }
+
+        .slider-mask {
+            position: absolute; left: 0; top: 0;
+            height: 100%; width: 0;
+            background: linear-gradient(90deg, rgba(241,152,113,0.15), rgba(241,152,113,0.25));
+            border-radius: 26px;
+            transition: width 0.08s linear;
+            display: flex; align-items: center; justify-content: flex-end;
+            padding-right: 32px;
+        }
+        .slider-mask .mask-check {
+            width: 18px; height: 18px; stroke: var(--primary);
+            display: none; flex-shrink: 0;
+            fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+        }
+        .slider-track.success .slider-mask {
+            background: linear-gradient(90deg, rgba(82,196,26,0.12), rgba(82,196,26,0.22));
+        }
+        .slider-track.success .slider-mask .mask-check { display: block; animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+        .slider-tips {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; color: var(--text-secondary);
+            pointer-events: none;
+            transition: opacity 0.2s;
+            letter-spacing: 0.5px;
+        }
+        .slider-track.active .slider-tips,
+        .slider-track.success .slider-tips { opacity: 0; }
+
+        .slider-knob {
+            position: absolute; left: 2px; top: 50%; transform: translateY(-50%);
+            width: 48px; height: 48px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: grab; z-index: 2;
+            box-shadow: 0 3px 10px rgba(241,152,113,0.35);
+            transition: background 0.3s, box-shadow 0.3s, transform 0.15s;
+        }
+        .slider-knob:active { cursor: grabbing; box-shadow: 0 1px 4px rgba(241,152,113,0.4); }
+        .slider-track.success .slider-knob {
+            background: var(--success);
+            box-shadow: 0 3px 12px rgba(82,196,26,0.35);
+        }
+        .slider-knob .knob-arrow,
+        .slider-knob .knob-check {
+            width: 20px; height: 20px; stroke: #fff;
+            flex-shrink: 0; fill: none;
+            stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+        }
+        .slider-knob .knob-check { display: none; }
+        .slider-track.success .slider-knob .knob-arrow { display: none; }
+        .slider-track.success .slider-knob .knob-check { display: block; animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+        @keyframes popIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        /* ======== Button ======== */
+        .btn-submit {
+            display: block;
+            width: 100%;
+            margin-top: 34px;
+            height: 52px;
+            line-height: 52px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            font-size: 17px;
+            font-weight: 600;
+            border-radius: 14px;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            letter-spacing: 1.5px;
+            box-shadow: 0 6px 20px rgba(241,152,113,0.3);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-submit:hover { box-shadow: 0 8px 26px rgba(241,152,113,0.38); transform: translateY(-1px); }
+        .btn-submit:active { box-shadow: 0 3px 10px rgba(241,152,113,0.25); transform: translateY(0) scale(0.98); }
+        .btn-submit::after {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 0; height: 0; border-radius: 50%;
+            background: rgba(255,255,255,0.25);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn-submit:active::after { width: 500px; height: 500px; }
+        .btn-submit:disabled { background: #D1D5DB; box-shadow: none; cursor: not-allowed; transform: none; }
+        .btn-submit:disabled::after { display: none; }
+
+        /* ======== Bottom Link ======== */
+        .bottom-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 15px;
+            color: var(--primary);
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        .bottom-link:active { opacity: 0.7; }
+
+        /* ======== Agreement ======== */
+        .agreement-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-top: 16px;
+            cursor: pointer;
+        }
+        .agreement-row input[type="checkbox"] { display: none; }
+        .agree-dot {
+            width: 20px; height: 20px;
+            border: 2px solid #D1D5DB;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 2px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s;
+        }
+        .agreement-row input:checked + .agree-dot {
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 2px 6px rgba(241,152,113,0.3);
+        }
+        .agreement-row input:checked + .agree-dot::after {
+            content: ''; width: 6px; height: 10px;
+            border: 2px solid #fff; border-top: none; border-left: none;
+            transform: rotate(45deg) translateY(-1px);
+            animation: agreePop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes agreePop {
+            from { transform: rotate(45deg) scale(0); }
+            to { transform: rotate(45deg) scale(1) translateY(-1px); }
+        }
+        .agree-text {
+            font-size: 13px; color: var(--text-secondary); line-height: 1.7;
+        }
+        .agree-text a { color: var(--primary); text-decoration: none; font-weight: 500; }
+
+        /* ======== Toast ======== */
+        .toast-layer {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+            display: flex; justify-content: center; pointer-events: none;
+        }
+        .toast-msg {
+            margin-top: 55px; padding: 14px 30px;
+            background: rgba(45,45,45,0.9);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            color: #fff; font-size: 15px; letter-spacing: 0.5px;
+            border-radius: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s;
+            transform: translateY(-120px); opacity: 0;
+        }
+        .toast-msg.show { transform: translateY(0); opacity: 1; }
+
+        /* ======== Responsive ======== */
+        @media (min-width: 480px) {
+            body { background: #F0F0F5; }
+            .page {
+                margin: 20px auto;
+                min-height: auto;
+                background: linear-gradient(180deg, #FFF8F5 0%, #FFFFFF 40%);
+                border-radius: 24px;
+                box-shadow: var(--shadow-lg);
+                overflow: hidden;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toast-layer"><div class="toast-msg" id="toast"></div></div>
+
+    <div class="page">
+        <!-- Logo -->
+        <div class="logo-area">
+            <img src="https://zeus-h5.irongchacha.cn/static/img/logBg.fcea3624.png" alt="Zeus">
+        </div>
+
+        <!-- Tabs -->
+        <div class="tab-bar" id="tabs">
+            <div class="tab-item active" data-panel="login">登录</div>
+            <div class="tab-item" data-panel="register">注册</div>
+        </div>
+
+        <!-- ==================== LOGIN ==================== -->
+        <div class="form-panel active" id="panel-login">
+
+            <!-- Password Login -->
+            <div class="login-mode active" id="login-pwd-mode">
+                <div class="form-card">
+                    <div class="field-group">
+                        <div class="field-label">用户名</div>
+                        <div class="field-box" id="login-username-group">
+                            <span class="field-icon">
+                                <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 20v-1a7 7 0 0 1 14 0v1"/></svg>
+                            </span>
+                            <input type="text" class="field-input" id="login-username" placeholder="请输入用户姓名" autocomplete="off" maxlength="20">
+                        </div>
+                        <div class="field-error" id="login-username-error">请输入用户名</div>
+                    </div>
+
+                    <div class="field-group">
+                        <div class="field-label">密码</div>
+                        <div class="field-box" id="login-password-group">
+                            <span class="field-icon">
+                                <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            </span>
+                            <input type="password" class="field-input" id="login-password" placeholder="请输入密码" autocomplete="off">
+                            <span class="pwd-eye" id="login-pwd-toggle">
+                                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </span>
+                        </div>
+                        <div class="field-error" id="login-password-error">请输入密码</div>
+                    </div>
+
+                    <div class="slider-wrap">
+                        <div class="slider-track" id="login-slider">
+                            <div class="slider-mask">
+                                <svg class="mask-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div class="slider-tips">请按住滑块，拖动到最右边</div>
+                            <div class="slider-knob" id="login-slider-btn">
+                                <svg class="knob-arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                                <svg class="knob-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-submit" id="login-submit">登录</button>
+                </div>
+                <div class="bottom-link" id="switch-to-sms-login">验证码登陆</div>
+            </div>
+
+            <!-- SMS Login -->
+            <div class="login-mode" id="login-sms-mode" style="display:none;">
+                <div class="form-card">
+                    <div class="field-group">
+                        <div class="field-label">手机号</div>
+                        <div class="field-box" id="sms-login-phone-group">
+                            <span class="field-icon">
+                                <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                            </span>
+                            <input type="tel" class="field-input" id="sms-login-phone" placeholder="请输入手机号" autocomplete="off" maxlength="11">
+                        </div>
+                        <div class="field-error" id="sms-login-phone-error">请输入正确的11位手机号</div>
+                    </div>
+
+                    <div class="field-group">
+                        <div class="field-label">验证码</div>
+                        <div class="sms-field-box">
+                            <div class="field-box" id="sms-login-code-group">
+                                <span class="field-icon">
+                                    <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M6 16h.01M10 16h.01M14 16h.01"/></svg>
+                                </span>
+                                <input type="text" class="field-input" id="sms-login-code" placeholder="短信验证码" autocomplete="off" maxlength="6">
+                            </div>
+                            <button class="sms-btn" id="sms-login-btn" type="button">获取验证码</button>
+                        </div>
+                        <div class="field-error" id="sms-login-code-error">请输入短信验证码</div>
+                    </div>
+
+                    <div class="slider-wrap">
+                        <div class="slider-track" id="sms-login-slider">
+                            <div class="slider-mask">
+                                <svg class="mask-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div class="slider-tips">请按住滑块，拖动到最右边</div>
+                            <div class="slider-knob" id="sms-login-slider-btn">
+                                <svg class="knob-arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                                <svg class="knob-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-submit" id="sms-login-submit">登录</button>
+                </div>
+                <div class="bottom-link" id="switch-to-pwd-login">密码登陆</div>
+            </div>
+        </div>
+
+        <!-- ==================== REGISTER ==================== -->
+        <div class="form-panel" id="panel-register" style="display:none;">
+            <div class="form-card">
+                <div class="field-group">
+                    <div class="field-label">用户姓名</div>
+                    <div class="field-box" id="reg-name-group">
+                        <span class="field-icon">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 20v-1a7 7 0 0 1 14 0v1"/></svg>
+                        </span>
+                        <input type="text" class="field-input" id="reg-name" placeholder="请输入用户姓名" autocomplete="off" maxlength="20">
+                    </div>
+                    <div class="field-error" id="reg-name-error">请输入用户姓名</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">手机号</div>
+                    <div class="field-box" id="reg-phone-group">
+                        <span class="field-icon">
+                            <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                        </span>
+                        <input type="tel" class="field-input" id="reg-phone" placeholder="请输入手机号" autocomplete="off" maxlength="11">
+                    </div>
+                    <div class="field-error" id="reg-phone-error">请输入正确的11位手机号</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">验证码</div>
+                    <div class="sms-field-box">
+                        <div class="field-box" id="reg-sms-group">
+                            <span class="field-icon">
+                                <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M6 16h.01M10 16h.01M14 16h.01"/></svg>
+                            </span>
+                            <input type="text" class="field-input" id="reg-sms-code" placeholder="短信验证码" autocomplete="off" maxlength="6">
+                        </div>
+                        <button class="sms-btn" id="sms-btn" type="button">获取验证码</button>
+                    </div>
+                    <div class="field-error" id="reg-sms-error">请输入短信验证码</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">设置密码</div>
+                    <div class="field-box" id="reg-password-group">
+                        <span class="field-icon">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </span>
+                        <input type="password" class="field-input" id="reg-password" placeholder="6-20位密码" autocomplete="off">
+                        <span class="pwd-eye" id="reg-pwd-toggle">
+                            <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </span>
+                    </div>
+                    <div class="field-error" id="reg-password-error">密码长度需为6-20位</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">确认密码</div>
+                    <div class="field-box" id="reg-confirm-group">
+                        <span class="field-icon">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><path d="M12 15v3"/></svg>
+                        </span>
+                        <input type="password" class="field-input" id="reg-confirm" placeholder="请再次输入密码" autocomplete="off">
+                        <span class="pwd-eye" id="reg-confirm-toggle">
+                            <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </span>
+                    </div>
+                    <div class="field-error" id="reg-confirm-error">两次输入的密码不一致</div>
+                </div>
+
+                <div class="slider-wrap">
+                    <div class="slider-track" id="reg-slider">
+                        <div class="slider-mask">
+                            <svg class="mask-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="slider-tips">请按住滑块，拖动到最右边</div>
+                        <div class="slider-knob" id="reg-slider-btn">
+                            <svg class="knob-arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                            <svg class="knob-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <label class="agreement-row">
+                    <input type="checkbox" id="reg-agreement" checked>
+                    <span class="agree-dot"></span>
+                    <span class="agree-text">我已阅读并同意<a href="javascript:void(0)" id="terms-link">《用户服务协议》</a>和<a href="javascript:void(0)" id="privacy-link">《隐私政策》</a></span>
+                </label>
+
+                <button class="btn-submit" id="reg-submit">注册</button>
+            </div>
+            <div class="bottom-link" id="switch-to-login">已有账号？立即登录</div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        var panelLogin = document.getElementById('panel-login');
+        var panelRegister = document.getElementById('panel-register');
+        var tabs = document.querySelectorAll('#tabs .tab-item');
+
+        function switchPanel(panel) {
+            tabs.forEach(function(t) { t.classList.toggle('active', t.dataset.panel === panel); });
+            if (panel === 'login') {
+                panelLogin.style.display = 'block';
+                panelRegister.style.display = 'none';
+                resetSlider('login-slider', 'login-slider-btn');
+                resetSlider('sms-login-slider', 'sms-login-slider-btn');
+            } else {
+                panelLogin.style.display = 'none';
+                panelRegister.style.display = 'block';
+                resetSlider('reg-slider', 'reg-slider-btn');
+            }
+        }
+
+        tabs.forEach(function(tab) {
+            tab.addEventListener('click', function() { switchPanel(tab.dataset.panel); });
+        });
+
+        // Login mode switch (pwd / sms)
+        var loginPwdMode = document.getElementById('login-pwd-mode');
+        var loginSmsMode = document.getElementById('login-sms-mode');
+        function switchLoginMode(mode) {
+            if (mode === 'sms') {
+                loginPwdMode.style.display = 'none';
+                loginSmsMode.style.display = 'block';
+                resetSlider('sms-login-slider', 'sms-login-slider-btn');
+            } else {
+                loginPwdMode.style.display = 'block';
+                loginSmsMode.style.display = 'none';
+                resetSlider('login-slider', 'login-slider-btn');
+            }
+        }
+        document.getElementById('switch-to-sms-login').addEventListener('click', function() { switchLoginMode('sms'); });
+        document.getElementById('switch-to-pwd-login').addEventListener('click', function() { switchLoginMode('pwd'); });
+        document.getElementById('switch-to-login').addEventListener('click', function() { switchPanel('login'); });
+
+        // Toast
+        var toastEl = document.getElementById('toast'), toastTimer;
+        function showToast(msg) {
+            clearTimeout(toastTimer);
+            toastEl.textContent = msg;
+            toastEl.classList.add('show');
+            toastTimer = setTimeout(function() { toastEl.classList.remove('show'); }, 2000);
+        }
+
+        // Input focus
+        document.querySelectorAll('.field-box').forEach(function(box) {
+            var input = box.querySelector('.field-input');
+            if (!input) return;
+            input.addEventListener('focus', function() {
+                box.classList.remove('error');
+                var err = box.parentElement.querySelector('.field-error');
+                if (err) err.classList.remove('show');
+            });
+        });
+
+        // Password toggle
+        function setupPwdToggle(toggleId, inputId) {
+            var toggle = document.getElementById(toggleId);
+            var input = document.getElementById(inputId);
+            if (!toggle || !input) return;
+            var open = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+            var closed = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault(); e.stopPropagation();
+                var isPwd = input.type === 'password';
+                input.type = isPwd ? 'text' : 'password';
+                toggle.querySelector('svg').innerHTML = isPwd ? closed : open;
+            });
+        }
+        setupPwdToggle('login-pwd-toggle', 'login-password');
+        setupPwdToggle('reg-pwd-toggle', 'reg-password');
+        setupPwdToggle('reg-confirm-toggle', 'reg-confirm');
+
+        // Slider
+        function initSlider(trackId, knobId) {
+            var track = document.getElementById(trackId);
+            var knob = document.getElementById(knobId);
+            var mask = track.querySelector('.slider-mask');
+            var dragging = false, startX = 0, startLeft = 0;
+            function maxLeft() { return track.offsetWidth - knob.offsetWidth - 4; }
+            function onStart(e) {
+                if (track.classList.contains('success')) return;
+                dragging = true; track.classList.add('active');
+                var cx = e.touches ? e.touches[0].clientX : e.clientX;
+                startX = cx;
+                startLeft = parseFloat(knob.style.left || 2);
+                knob.style.transition = 'none'; mask.style.transition = 'none';
+                e.preventDefault();
+            }
+            function onMove(e) {
+                if (!dragging) return;
+                var cx = e.touches ? e.touches[0].clientX : e.clientX;
+                var dx = cx - startX;
+                var nl = Math.max(2, Math.min(startLeft + dx, maxLeft()));
+                knob.style.left = nl + 'px';
+                mask.style.width = (nl + knob.offsetWidth / 2) + 'px';
+            }
+            function onEnd() {
+                if (!dragging) return;
+                dragging = false; track.classList.remove('active');
+                knob.style.transition = 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s, background 0.3s';
+                mask.style.transition = 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                var cl = parseFloat(knob.style.left || 2);
+                if (cl >= maxLeft() - 6) {
+                    knob.style.left = maxLeft() + 'px';
+                    mask.style.width = '100%';
+                    track.classList.add('success');
+                } else {
+                    knob.style.left = '2px'; mask.style.width = '0';
+                }
+            }
+            knob.addEventListener('mousedown', onStart);
+            knob.addEventListener('touchstart', onStart, { passive: false });
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('touchmove', onMove, { passive: false });
+            document.addEventListener('mouseup', onEnd);
+            document.addEventListener('touchend', onEnd);
+        }
+        function resetSlider(trackId, knobId) {
+            var track = document.getElementById(trackId);
+            var knob = document.getElementById(knobId);
+            var mask = track.querySelector('.slider-mask');
+            track.classList.remove('success', 'active');
+            knob.style.left = '2px'; knob.style.transition = 'none';
+            mask.style.width = '0'; mask.style.transition = 'none';
+        }
+        function isSliderDone(id) { return document.getElementById(id).classList.contains('success'); }
+
+        initSlider('login-slider', 'login-slider-btn');
+        initSlider('sms-login-slider', 'sms-login-slider-btn');
+        initSlider('reg-slider', 'reg-slider-btn');
+
+        // Login (password)
+        document.getElementById('login-submit').addEventListener('click', function() {
+            var ok = true;
+            var u = document.getElementById('login-username').value.trim();
+            var p = document.getElementById('login-password').value.trim();
+            if (!u) { document.getElementById('login-username-group').classList.add('error'); document.getElementById('login-username-error').classList.add('show'); ok = false; }
+            if (!p) { document.getElementById('login-password-group').classList.add('error'); document.getElementById('login-password-error').classList.add('show'); ok = false; }
+            if (!isSliderDone('login-slider')) { showToast('请完成滑块验证'); ok = false; }
+            if (!ok) return;
+            showToast('登录成功');
+        });
+
+        // SMS Login
+        var smsLoginBtn = document.getElementById('sms-login-btn');
+        var smsLoginTimer, smsLoginCount = 0;
+        smsLoginBtn.addEventListener('click', function() {
+            if (smsLoginCount > 0) return;
+            var phone = document.getElementById('sms-login-phone').value.replace(/\D/g, '');
+            if (!/^1[3-9]\d{9}$/.test(phone)) {
+                document.getElementById('sms-login-phone-group').classList.add('error');
+                document.getElementById('sms-login-phone-error').classList.add('show');
+                showToast('请输入正确的手机号'); return;
+            }
+            smsLoginCount = 60; smsLoginBtn.textContent = smsLoginCount + 's';
+            smsLoginBtn.classList.add('counting'); smsLoginBtn.disabled = true;
+            smsLoginTimer = setInterval(function() {
+                smsLoginCount--;
+                if (smsLoginCount <= 0) { clearInterval(smsLoginTimer); smsLoginBtn.textContent = '获取验证码'; smsLoginBtn.classList.remove('counting'); smsLoginBtn.disabled = false; }
+                else { smsLoginBtn.textContent = smsLoginCount + 's'; }
+            }, 1000);
+            showToast('验证码已发送');
+        });
+        document.getElementById('sms-login-submit').addEventListener('click', function() {
+            var ok = true;
+            var phone = document.getElementById('sms-login-phone').value.replace(/\D/g, '');
+            var code = document.getElementById('sms-login-code').value.replace(/\D/g, '');
+            document.querySelectorAll('#login-sms-mode .field-box.error').forEach(function(g) { g.classList.remove('error'); });
+            document.querySelectorAll('#login-sms-mode .field-error.show').forEach(function(e) { e.classList.remove('show'); });
+            if (!/^1[3-9]\d{9}$/.test(phone)) { document.getElementById('sms-login-phone-group').classList.add('error'); document.getElementById('sms-login-phone-error').classList.add('show'); ok = false; }
+            if (!/^\d{4,6}$/.test(code)) { document.getElementById('sms-login-code-group').classList.add('error'); document.getElementById('sms-login-code-error').classList.add('show'); ok = false; }
+            if (!isSliderDone('sms-login-slider')) { showToast('请完成滑块验证'); ok = false; }
+            if (!ok) return;
+            showToast('登录成功');
+        });
+        document.getElementById('sms-login-phone').addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
+        document.getElementById('sms-login-code').addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
+
+        // Register SMS
+        var smsBtn = document.getElementById('sms-btn');
+        var smsTimer, smsCount = 0;
+        smsBtn.addEventListener('click', function() {
+            if (smsCount > 0) return;
+            var phone = document.getElementById('reg-phone').value.replace(/\D/g, '');
+            if (!/^1[3-9]\d{9}$/.test(phone)) {
+                document.getElementById('reg-phone-group').classList.add('error');
+                document.getElementById('reg-phone-error').classList.add('show');
+                showToast('请输入正确的手机号'); return;
+            }
+            smsCount = 60; smsBtn.textContent = smsCount + 's';
+            smsBtn.classList.add('counting'); smsBtn.disabled = true;
+            smsTimer = setInterval(function() {
+                smsCount--;
+                if (smsCount <= 0) { clearInterval(smsTimer); smsBtn.textContent = '获取验证码'; smsBtn.classList.remove('counting'); smsBtn.disabled = false; }
+                else { smsBtn.textContent = smsCount + 's'; }
+            }, 1000);
+            showToast('验证码已发送');
+        });
+
+        // Register submit
+        document.getElementById('reg-submit').addEventListener('click', function() {
+            var ok = true;
+            var phone = document.getElementById('reg-phone').value.replace(/\D/g, '');
+            var code = document.getElementById('reg-sms-code').value.replace(/\D/g, '');
+            var name = document.getElementById('reg-name').value.trim();
+            var pw = document.getElementById('reg-password').value;
+            var cp = document.getElementById('reg-confirm').value;
+            var agree = document.getElementById('reg-agreement').checked;
+            document.querySelectorAll('#panel-register .field-box.error').forEach(function(g) { g.classList.remove('error'); });
+            document.querySelectorAll('#panel-register .field-error.show').forEach(function(e) { e.classList.remove('show'); });
+            if (!/^1[3-9]\d{9}$/.test(phone)) { document.getElementById('reg-phone-group').classList.add('error'); document.getElementById('reg-phone-error').classList.add('show'); ok = false; }
+            if (!/^\d{4,6}$/.test(code)) { document.getElementById('reg-sms-group').classList.add('error'); document.getElementById('reg-sms-error').classList.add('show'); ok = false; }
+            if (!name || name.length < 2) { document.getElementById('reg-name-group').classList.add('error'); document.getElementById('reg-name-error').classList.add('show'); ok = false; }
+            if (pw.length < 6 || pw.length > 20) { document.getElementById('reg-password-group').classList.add('error'); document.getElementById('reg-password-error').classList.add('show'); ok = false; }
+            if (pw !== cp) { document.getElementById('reg-confirm-group').classList.add('error'); document.getElementById('reg-confirm-error').classList.add('show'); ok = false; }
+            if (!isSliderDone('reg-slider')) { showToast('请完成滑块验证'); ok = false; }
+            if (!agree) { showToast('请先同意用户协议'); ok = false; }
+            if (!ok) return;
+            showToast('注册成功');
+        });
+        document.getElementById('reg-phone').addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
+        document.getElementById('reg-sms-code').addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
+
+        // Agreement links
+        document.getElementById('terms-link').addEventListener('click', function(e) { e.stopPropagation(); showToast('用户服务协议'); });
+        document.getElementById('privacy-link').addEventListener('click', function(e) { e.stopPropagation(); showToast('隐私政策'); });
+
+        console.log('Zeus v2 已就绪');
+    })();
+    </script>
+</body>
+</html>
