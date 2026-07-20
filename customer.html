@@ -21,233 +21,174 @@
             --red: #FF3B30;
             --purple: #7C6FF7;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body {
-            width: 100%; min-height: 100vh; background: var(--bg);
-            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-            -webkit-tap-highlight-color: transparent; -webkit-font-smoothing: antialiased; overflow-x: hidden;
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html,body {
+            width:100%; min-height:100vh; background:var(--bg);
+            font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+            -webkit-tap-highlight-color:transparent; -webkit-font-smoothing:antialiased; overflow-x:hidden;
         }
-        .page {
-            width: 100%; max-width: 480px; margin: 0 auto;
-            min-height: 100vh; padding-bottom: 80px;
-            animation: pageIn 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-        }
-        @keyframes pageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .page { width:100%; max-width:480px; margin:0 auto; min-height:100vh; padding-bottom:80px; }
 
-        /* ======== Header ======== */
+        /* ======== Top Bar ======== */
         .top-bar {
-            background: var(--white);
-            padding: 12px 14px;
-            display: flex; align-items: center; gap: 10px;
-            position: sticky; top: 0; z-index: 100;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+            background:var(--white); padding:10px 12px;
+            display:flex; align-items:center; gap:8px;
+            position:sticky; top:0; z-index:100;
+            box-shadow:0 1px 4px rgba(0,0,0,0.03);
         }
-        .top-bar .title {
-            font-size: 17px; font-weight: 700; color: var(--text);
-            white-space: nowrap;
-        }
-        .search-wrap {
-            flex: 1; position: relative; min-width: 0;
-        }
+        .top-bar .title { font-size:16px; font-weight:700; color:var(--text); white-space:nowrap; margin-right:4px; }
+        .search-wrap { flex:1; position:relative; min-width:0; }
         .search-wrap input {
-            width: 100%; height: 36px;
-            padding: 0 14px 0 34px;
-            border: none; border-radius: 18px;
-            background: #F5F5F7;
-            font-size: 14px; color: var(--text);
-            outline: none; font-family: inherit;
+            width:100%; height:34px; padding:0 12px 0 32px;
+            border:none; border-radius:17px; background:#F5F5F7;
+            font-size:13px; color:var(--text); outline:none; font-family:inherit;
         }
-        .search-wrap input::placeholder { color: var(--text-muted); }
+        .search-wrap input::placeholder { color:var(--text-muted); }
         .search-icon {
-            position: absolute; left: 10px; top: 50%;
-            transform: translateY(-50%);
-            width: 16px; height: 16px; stroke: #C7C7CC; fill: none;
-            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-            pointer-events: none;
+            position:absolute; left:9px; top:50%; transform:translateY(-50%);
+            width:15px; height:15px; stroke:#C7C7CC; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; pointer-events:none;
         }
-        .icon-btn {
-            width: 36px; height: 36px; border-radius: 10px;
-            background: #F5F5F7;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; cursor: pointer;
+        .tool-btn {
+            width:34px; height:34px; border-radius:10px; background:#F5F5F7;
+            display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer;
         }
-        .icon-btn:active { background: #EBEBED; }
-        .icon-btn svg { width: 18px; height: 18px; stroke: var(--text-secondary); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .tool-btn:active { background:#EBEBED; }
+        .tool-btn svg { width:17px; height:17px; stroke:var(--text-secondary); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 
         /* ======== Stats ======== */
-        .stats-row {
-            display: flex; gap: 10px;
-            padding: 12px 14px 6px;
-        }
+        .stats-row { display:flex; gap:8px; padding:12px 12px 6px; }
         .stat-card {
-            flex: 1; padding: 14px 12px;
-            border-radius: 14px; cursor: pointer;
-            transition: transform 0.15s;
+            flex:1; padding:14px 10px; border-radius:14px; cursor:pointer;
+            transition:transform 0.15s;
         }
-        .stat-card:active { transform: scale(0.96); }
-        .stat-card.progress { background: #FFF0EA; }
-        .stat-card.follow { background: #EBF5FF; }
-        .stat-card.pending { background: #F0ECFF; }
-        .stat-number {
-            font-size: 28px; font-weight: 700;
-        }
-        .stat-card.progress .stat-number { color: #F19871; }
-        .stat-card.follow .stat-number { color: #4A90D9; }
-        .stat-card.pending .stat-number { color: #7C6FF7; }
-        .stat-label {
-            font-size: 12px; color: var(--text-secondary);
-            margin-top: 2px;
-        }
+        .stat-card:active { transform:scale(0.96); }
+        .stat-card.progress { background:var(--primary-light); }
+        .stat-card.follow { background:#EBF5FF; }
+        .stat-card.pending { background:#F0ECFF; }
+        .stat-num { font-size:26px; font-weight:700; }
+        .stat-card.progress .stat-num { color:var(--primary); }
+        .stat-card.follow .stat-num { color:var(--blue); }
+        .stat-card.pending .stat-num { color:var(--purple); }
+        .stat-label { font-size:11px; color:var(--text-secondary); margin-top:1px; }
 
-        /* ======== Saved Search Tags ======== */
+        /* ======== Saved Searches ======== */
         .tags-scroll {
-            padding: 0 14px 10px;
-            display: flex; gap: 8px;
-            overflow-x: auto; -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
+            padding:0 12px 10px; display:flex; gap:7px;
+            overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
         }
-        .tags-scroll::-webkit-scrollbar { display: none; }
+        .tags-scroll::-webkit-scrollbar { display:none; }
         .saved-tag {
-            padding: 6px 14px; border-radius: 16px;
-            font-size: 12px; color: var(--text-secondary);
-            background: var(--white); white-space: nowrap;
-            cursor: pointer; border: 1px solid var(--border);
-            transition: all 0.15s; flex-shrink: 0;
+            padding:5px 13px; border-radius:15px; font-size:12px;
+            color:var(--text-secondary); background:var(--white);
+            white-space:nowrap; cursor:pointer; border:1px solid var(--border);
+            flex-shrink:0; transition:all 0.15s;
         }
-        .saved-tag:active { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+        .saved-tag:active { background:var(--primary-light); border-color:var(--primary); color:var(--primary); }
 
         /* ======== Result Bar ======== */
         .result-bar {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 8px 14px;
+            display:flex; align-items:center; justify-content:space-between;
+            padding:6px 12px 8px;
         }
-        .result-count {
-            font-size: 12px; color: var(--text-secondary);
-        }
-        .result-count span { color: var(--primary); font-weight: 600; }
-        .sort-btn {
-            display: flex; align-items: center; gap: 4px;
-            font-size: 12px; color: var(--text-secondary); cursor: pointer;
-        }
-        .sort-btn svg { width: 14px; height: 14px; stroke: var(--text-secondary); fill: none; stroke-width: 2; }
+        .result-count { font-size:12px; color:var(--text-secondary); }
+        .result-count span { color:var(--primary); font-weight:600; }
+        .sort-btn { display:flex; align-items:center; gap:3px; font-size:12px; color:var(--text-secondary); cursor:pointer; }
+        .sort-btn svg { width:13px; height:13px; stroke:var(--text-secondary); fill:none; stroke-width:2; }
 
         /* ======== Customer Cards ======== */
-        .card-list { padding: 0 14px; }
+        .card-list { padding:0 12px; }
         .cus-card {
-            background: var(--white);
-            border-radius: 14px; padding: 16px;
-            margin-bottom: 10px;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.03);
-            cursor: pointer; transition: box-shadow 0.2s;
+            background:var(--white); border-radius:14px; padding:14px;
+            margin-bottom:8px; box-shadow:0 1px 6px rgba(0,0,0,0.03);
+            cursor:pointer; transition:box-shadow 0.2s;
         }
-        .cus-card:active { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+        .cus-card:active { box-shadow:0 2px 10px rgba(0,0,0,0.08); }
 
-        .cus-header {
-            display: flex; align-items: flex-start; justify-content: space-between;
-            margin-bottom: 8px;
-        }
-        .cus-name {
-            font-size: 16px; font-weight: 600; color: var(--text);
-            flex: 1; min-width: 0;
-        }
+        .cus-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:8px; }
+        .cus-name { font-size:15px; font-weight:600; color:var(--text); flex:1; min-width:0; line-height:1.3; }
         .cus-status {
-            padding: 3px 10px; border-radius: 10px;
-            font-size: 11px; font-weight: 600; white-space: nowrap;
-            flex-shrink: 0;
+            padding:3px 10px; border-radius:10px; font-size:11px; font-weight:600;
+            white-space:nowrap; flex-shrink:0; margin-left:8px;
         }
-        .status-intent { background: #FFF0EA; color: #F19871; }
-        .status-new { background: #EBF5FF; color: #4A90D9; }
+        .st-intent { background:var(--primary-light); color:var(--primary); }
+        .st-new { background:#EBF5FF; color:var(--blue); }
 
-        /* Company tags */
-        .company-tags {
-            display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px;
-        }
+        /* Tags */
+        .company-tags { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:10px; }
         .ctag {
-            padding: 2px 8px; border-radius: 4px;
-            font-size: 10px; font-weight: 500;
-            background: #F5F5F7; color: var(--text-secondary);
+            padding:2px 8px; border-radius:4px; font-size:10px; font-weight:500;
+            background:#F5F5F7; color:var(--text-secondary);
         }
-        .ctag.highlight { background: var(--primary-light); color: #F19871; }
+        .ctag.impt { background:var(--primary-light); color:var(--primary); }
+        .asset-tags { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px; }
+        .atag {
+            padding:2px 8px; border-radius:4px; font-size:10px; font-weight:500;
+            background:#F0FFF4; color:var(--green);
+        }
 
-        /* Loan info */
-        .loan-row {
-            display: flex; align-items: center; gap: 10px;
-            margin-bottom: 10px; padding: 8px 12px;
-            background: #FFF8F5; border-radius: 8px;
+        /* Loan highlight */
+        .loan-box {
+            display:flex; align-items:center; gap:10px;
+            margin-bottom:8px; padding:10px 12px;
+            background:#FFF8F5; border-radius:10px;
         }
-        .loan-amount {
-            font-size: 16px; font-weight: 700; color: #F19871;
+        .loan-box .amount { font-size:20px; font-weight:700; color:var(--primary); flex-shrink:0; }
+        .loan-box .amount small { font-size:12px; font-weight:500; }
+        .loan-box .info { flex:1; font-size:11px; color:var(--text-secondary); line-height:1.5; }
+
+        /* Follow-up note */
+        .follow-note {
+            padding:8px 10px; margin-bottom:8px;
+            background:#F9F9FB; border-radius:8px;
+            font-size:11px; color:var(--text-secondary);
+            line-height:1.5; max-height:48px; overflow:hidden;
+            display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
         }
-        .loan-detail {
-            font-size: 11px; color: var(--text-secondary);
-            flex: 1;
-        }
-        .loan-detail div + div { margin-top: 2px; }
+        .follow-note .fn-label { color:var(--text-muted); margin-right:4px; }
 
         /* Meta row */
         .meta-row {
-            display: flex; flex-wrap: wrap; gap: 4px 12px;
-            font-size: 11px; color: var(--text-secondary);
-            margin-bottom: 8px;
-            padding-top: 8px;
-            border-top: 1px solid var(--border);
+            display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px;
+            font-size:11px; color:var(--text-secondary);
+            padding-top:8px; border-top:1px solid var(--border);
+            margin-bottom:8px;
         }
-        .meta-item { display: flex; align-items: center; gap: 3px; }
-        .meta-dot { width: 4px; height: 4px; border-radius: 50%; }
-        .meta-dot.green { background: var(--green); }
+        .meta-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+        .md-green { background:var(--green); }
+        .meta-item { display:flex; align-items:center; gap:3px; }
+        .follow-badge {
+            font-size:10px; color:#FF9500; background:#FFF7E6;
+            padding:2px 8px; border-radius:8px; font-weight:500;
+        }
 
-        /* Footer row */
-        .cus-footer {
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .follower {
-            font-size: 12px; color: var(--text-secondary);
-            display: flex; align-items: center; gap: 4px;
-        }
-        .follower-avatar {
-            width: 20px; height: 20px; border-radius: 50%;
-            background: var(--primary); color: #fff;
-            font-size: 10px; font-weight: 600;
-            display: flex; align-items: center; justify-content: center;
-        }
+        /* Footer */
+        .cus-footer { display:flex; align-items:center; justify-content:space-between; }
+        .follower { font-size:12px; color:var(--text-secondary); display:flex; align-items:center; gap:5px; }
+        .avo { width:20px; height:20px; border-radius:50%; background:var(--primary); color:#fff; font-size:10px; font-weight:600; display:flex; align-items:center; justify-content:center; }
         .contact-btn {
-            padding: 6px 16px; border-radius: 16px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: #fff; font-size: 12px; font-weight: 600;
-            border: none; cursor: pointer; font-family: inherit;
-            transition: opacity 0.2s;
+            padding:7px 18px; border-radius:16px; border:none; cursor:pointer;
+            font-family:inherit; font-size:12px; font-weight:600; color:#fff;
+            background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+            transition:opacity 0.2s;
         }
-        .contact-btn:active { opacity: 0.8; }
-
-        /* Follow-up hint */
-        .follow-hint {
-            display: inline-block;
-            font-size: 11px; color: #FF9500;
-            background: #FFF7E6; padding: 2px 8px;
-            border-radius: 8px;
-        }
+        .contact-btn:active { opacity:0.8; }
 
         /* ======== Tab Bar ======== */
         .tab-bar {
-            position: fixed; bottom: 0; left: 0; right: 0; max-width: 480px; margin: 0 auto;
-            background: rgba(255,255,255,0.94);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            display: flex; border-top: 0.5px solid var(--border);
-            padding: 4px 0 env(safe-area-inset-bottom, 8px); z-index: 100;
+            position:fixed; bottom:0; left:0; right:0; max-width:480px; margin:0 auto;
+            background:rgba(255,255,255,0.94); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+            display:flex; border-top:0.5px solid var(--border);
+            padding:4px 0 env(safe-area-inset-bottom,8px); z-index:100;
         }
-        .tab-item {
-            flex: 1; display: flex; flex-direction: column;
-            align-items: center; gap: 2px; cursor: pointer; padding: 6px 0 2px;
-        }
-        .tab-item svg { width: 24px; height: 24px; stroke: #8E8E93; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-        .tab-item.active svg { stroke: var(--primary); }
-        .tab-label { font-size: 10px; color: #8E8E93; }
-        .tab-item.active .tab-label { color: var(--primary); }
+        .tab-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; padding:6px 0 2px; }
+        .tab-item svg { width:24px; height:24px; stroke:#8E8E93; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+        .tab-item.active svg { stroke:var(--primary); }
+        .tab-label { font-size:10px; color:#8E8E93; }
+        .tab-item.active .tab-label { color:var(--primary); }
 
-        @media (min-width: 480px) {
-            body { background: #ECECF0; }
-            .page { margin: 0 auto; min-height: auto; box-shadow: 0 12px 40px rgba(0,0,0,0.1); overflow: hidden; }
+        @media (min-width:480px) {
+            body { background:#ECECF0; }
+            .page { margin:0 auto; box-shadow:0 12px 40px rgba(0,0,0,0.1); overflow:hidden; }
         }
     </style>
 </head>
@@ -256,32 +197,22 @@
         <!-- Top Bar -->
         <div class="top-bar">
             <div class="title">我的客户</div>
+            <div class="tool-btn" style="margin-right:-4px">
+                <svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            </div>
             <div class="search-wrap">
                 <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <input type="text" placeholder="请输入姓名/企业全称">
             </div>
-            <div class="icon-btn" id="btnFilter">
-                <svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-            </div>
-            <div class="icon-btn">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-            </div>
+            <div class="tool-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+            <div class="tool-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></div>
         </div>
 
         <!-- Stats -->
         <div class="stats-row">
-            <div class="stat-card progress">
-                <div class="stat-number">12</div>
-                <div class="stat-label">进行中</div>
-            </div>
-            <div class="stat-card follow">
-                <div class="stat-number">11</div>
-                <div class="stat-label">待跟进</div>
-            </div>
-            <div class="stat-card pending">
-                <div class="stat-number">8</div>
-                <div class="stat-label">待处理</div>
-            </div>
+            <div class="stat-card progress"><div class="stat-num">12</div><div class="stat-label">进行中</div></div>
+            <div class="stat-card follow"><div class="stat-num">11</div><div class="stat-label">待跟进</div></div>
+            <div class="stat-card pending"><div class="stat-num">8</div><div class="stat-label">待处理</div></div>
         </div>
 
         <!-- Saved Searches -->
@@ -296,179 +227,186 @@
         <!-- Result -->
         <div class="result-bar">
             <div class="result-count">为您筛选到 <span>120,312</span> 条相关结果</div>
-            <div class="sort-btn">
-                默认排序
-                <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </div>
+            <div class="sort-btn">默认排序 <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
         </div>
 
         <!-- Customer Cards -->
         <div class="card-list">
-            <!-- Card 1 -->
+
+            <!-- 1. 比亚迪 -->
             <div class="cus-card">
                 <div class="cus-header">
                     <div class="cus-name">比亚迪汽车工业有限公司</div>
-                    <span class="cus-status status-intent">有意向</span>
+                    <span class="cus-status st-intent">有意向</span>
                 </div>
                 <div class="company-tags">
-                    <span class="ctag">在营</span>
-                    <span class="ctag">KP联系人</span>
-                    <span class="ctag highlight">A级纳税人</span>
-                    <span class="ctag">一般纳税人</span>
-                    <span class="ctag highlight">高新企业</span>
-                    <span class="ctag">企业技术中心</span>
-                    <span class="ctag">规模以上工业</span>
+                    <span class="ctag">在营</span><span class="ctag">KP联系人</span>
+                    <span class="ctag impt">A级纳税人</span><span class="ctag">一般纳税人</span>
+                    <span class="ctag impt">高新企业</span><span class="ctag">战略投资</span>
+                    <span class="ctag">企业技术中心</span><span class="ctag">规模以上工业</span>
+                    <span class="ctag">有厂房</span>
                 </div>
-                <div class="loan-row">
-                    <div class="loan-amount">500万</div>
-                    <div class="loan-detail">
+                <div class="asset-tags">
+                    <span class="atag">房产</span><span class="atag">代发</span>
+                    <span class="atag">公积金</span><span class="atag">社保</span>
+                    <span class="atag">有车</span><span class="atag">有保单</span>
+                </div>
+                <div class="loan-box">
+                    <div class="amount">500<small>万</small></div>
+                    <div class="info">
                         <div>需求金额 · 抵押贷</div>
-                        <div>近一年纳税 8910万 · 近一年开票 500万</div>
+                        <div>近一年纳税 8,910万 · 近一年开票 500万</div>
                     </div>
+                </div>
+                <div class="follow-note">
+                    <span class="fn-label">最新跟进：</span>后端：1、规则列表分页接口 2、规则详情接口 3、新增规则接口 4、更新规则接口 5、启用/禁用规则接口 6、逻辑删除规则接口 7、规则下拉列表接口 8、日志分页查询接口 9、流转规则开发 10、重启服务，注册所有定时任务，关闭服务，注销所有定时任务 11、新增立即触发流转规则接口
                 </div>
                 <div class="meta-row">
-                    <div class="meta-item"><div class="meta-dot green"></div>完全准入</div>
-                    <div class="meta-item">跟进中</div>
-                    <div class="meta-item">更新于 07-20 09:08</div>
-                    <span class="follow-hint">1天后跟进</span>
+                    <div class="meta-item"><div class="meta-dot md-green"></div>完全准入</div>
+                    <div class="meta-item">· 跟进中</div>
+                    <div class="meta-item">· 更新于 07-20 09:08</div>
+                    <span class="follow-badge">1天后跟进</span>
                 </div>
                 <div class="cus-footer">
-                    <div class="follower">
-                        <div class="follower-avatar">周</div>
-                        周林科
-                    </div>
+                    <div class="follower"><div class="avo">周</div>周林科</div>
                     <button class="contact-btn">联系客户</button>
                 </div>
             </div>
 
-            <!-- Card 2 -->
+            <!-- 2. 华为 -->
             <div class="cus-card">
                 <div class="cus-header">
                     <div class="cus-name">华为技术有限公司</div>
-                    <span class="cus-status status-new">新入库</span>
+                    <span class="cus-status st-new">新入库</span>
                 </div>
                 <div class="company-tags">
-                    <span class="ctag">在营</span>
-                    <span class="ctag">KP联系人</span>
-                    <span class="ctag highlight">A级纳税人</span>
-                    <span class="ctag">一般纳税人</span>
-                    <span class="ctag highlight">高新企业</span>
-                    <span class="ctag highlight">500强企业</span>
-                    <span class="ctag">企业技术中心</span>
+                    <span class="ctag">在营</span><span class="ctag">KP联系人</span>
+                    <span class="ctag impt">A级纳税人</span><span class="ctag">一般纳税人</span>
+                    <span class="ctag impt">高新企业</span><span class="ctag impt">500强企业</span>
+                    <span class="ctag">企业技术中心</span><span class="ctag">规模以上工业</span>
+                    <span class="ctag">技术创新示范企业</span>
                 </div>
                 <div class="meta-row">
-                    <div class="meta-item"><div class="meta-dot green"></div>完全准入</div>
-                    <div class="meta-item">跟进中 · 抵押贷</div>
-                    <div class="meta-item">更新于 07-10 17:26</div>
-                    <span class="follow-hint">去跟进</span>
+                    <div class="meta-item"><div class="meta-dot md-green"></div>完全准入</div>
+                    <div class="meta-item">· 跟进中</div>
+                    <div class="meta-item">· 抵押贷</div>
+                    <div class="meta-item">· 更新于 07-10 17:26</div>
+                    <span class="follow-badge">去跟进</span>
                 </div>
                 <div class="cus-footer">
-                    <div class="follower">
-                        <div class="follower-avatar">周</div>
-                        周林科
-                    </div>
+                    <div class="follower"><div class="avo">周</div>周林科</div>
                     <button class="contact-btn">联系客户</button>
                 </div>
             </div>
 
-            <!-- Card 3 -->
+            <!-- 3. 晨北科技 -->
             <div class="cus-card">
                 <div class="cus-header">
                     <div class="cus-name">深圳市晨北科技有限公司</div>
-                    <span class="cus-status status-new">新入库</span>
+                    <span class="cus-status st-new">新入库</span>
                 </div>
                 <div class="company-tags">
-                    <span class="ctag">在营</span>
-                    <span class="ctag">KP联系人</span>
-                    <span class="ctag highlight">A级纳税人</span>
-                    <span class="ctag">一般纳税人</span>
-                    <span class="ctag highlight">高新企业</span>
-                    <span class="ctag">IPO</span>
+                    <span class="ctag">在营</span><span class="ctag">KP联系人</span>
+                    <span class="ctag impt">A级纳税人</span><span class="ctag">一般纳税人</span>
+                    <span class="ctag impt">高新企业</span><span class="ctag">IPO</span>
+                    <span class="ctag">限额以上批发和零售业</span>
                 </div>
-                <div class="loan-row">
-                    <div class="loan-amount">500万</div>
-                    <div class="loan-detail">
-                        <div>需求金额 · 信用贷/抵押贷/税票贷</div>
-                    </div>
+                <div class="loan-box">
+                    <div class="amount">500<small>万</small></div>
+                    <div class="info"><div>需求金额 · 信用贷 / 抵押贷 / 税票贷</div></div>
                 </div>
                 <div class="meta-row">
-                    <div class="meta-item"><div class="meta-dot green"></div>完全准入</div>
-                    <div class="meta-item">跟进中</div>
-                    <div class="meta-item">更新于 07-10 15:21</div>
-                    <span class="follow-hint">去跟进</span>
+                    <div class="meta-item"><div class="meta-dot md-green"></div>完全准入</div>
+                    <div class="meta-item">· 跟进中</div>
+                    <div class="meta-item">· 更新于 07-10 15:21</div>
+                    <span class="follow-badge">去跟进</span>
                 </div>
                 <div class="cus-footer">
-                    <div class="follower">
-                        <div class="follower-avatar">周</div>
-                        周林科
-                    </div>
+                    <div class="follower"><div class="avo">周</div>周林科</div>
                     <button class="contact-btn">联系客户</button>
                 </div>
             </div>
 
-            <!-- Card 4 -->
+            <!-- 4. 晶泰科技 -->
             <div class="cus-card">
                 <div class="cus-header">
                     <div class="cus-name">深圳晶泰科技有限公司</div>
-                    <span class="cus-status status-new">新入库</span>
+                    <span class="cus-status st-new">新入库</span>
                 </div>
                 <div class="company-tags">
-                    <span class="ctag highlight">专精特新</span>
-                    <span class="ctag">小微企业</span>
-                    <span class="ctag">科技型中小企业</span>
-                    <span class="ctag highlight">独角兽</span>
-                    <span class="ctag highlight">高新企业</span>
+                    <span class="ctag impt">专精特新</span><span class="ctag">小微企业</span>
+                    <span class="ctag">科技型中小企业</span><span class="ctag impt">独角兽</span>
+                    <span class="ctag impt">高新企业</span><span class="ctag">C轮及以上</span>
                 </div>
                 <div class="meta-row">
-                    <div class="meta-item"><div class="meta-dot green"></div>完全准入</div>
-                    <div class="meta-item">跟进中</div>
-                    <div class="meta-item">更新于 07-10 14:19</div>
-                    <span class="follow-hint">去跟进</span>
+                    <div class="meta-item"><div class="meta-dot md-green"></div>完全准入</div>
+                    <div class="meta-item">· 跟进中</div>
+                    <div class="meta-item">· 更新于 07-10 14:19</div>
+                    <span class="follow-badge">去跟进</span>
                 </div>
                 <div class="cus-footer">
-                    <div class="follower">
-                        <div class="follower-avatar">周</div>
-                        周林科
-                    </div>
+                    <div class="follower"><div class="avo">周</div>周林科</div>
                     <button class="contact-btn">联系客户</button>
                 </div>
             </div>
 
-            <!-- Card 5 -->
+            <!-- 5. 大疆 -->
             <div class="cus-card">
                 <div class="cus-header">
                     <div class="cus-name">深圳市大疆创新科技有限公司</div>
-                    <span class="cus-status status-new">新入库</span>
+                    <span class="cus-status st-new">新入库</span>
                 </div>
                 <div class="company-tags">
-                    <span class="ctag">在营</span>
-                    <span class="ctag">KP联系人</span>
-                    <span class="ctag highlight">A级纳税人</span>
-                    <span class="ctag highlight">独角兽企业</span>
-                    <span class="ctag highlight">瞪羚企业</span>
-                    <span class="ctag highlight">高新企业</span>
-                    <span class="ctag highlight">500强企业</span>
+                    <span class="ctag">在营</span><span class="ctag">KP联系人</span>
+                    <span class="ctag impt">A级纳税人</span><span class="ctag">一般纳税人</span>
+                    <span class="ctag impt">独角兽企业</span><span class="ctag impt">瞪羚企业</span>
+                    <span class="ctag impt">高新企业</span><span class="ctag impt">500强企业</span>
+                    <span class="ctag">企业技术中心</span><span class="ctag">规模以上工业</span>
+                    <span class="ctag">战略投资</span>
+                    <span class="ctag">技术创新示范企业</span>
                 </div>
-                <div class="loan-row">
-                    <div class="loan-amount">500万</div>
-                    <div class="loan-detail">
-                        <div>需求金额 · 抵押贷/信用贷/税票贷</div>
-                    </div>
+                <div class="loan-box">
+                    <div class="amount">500<small>万</small></div>
+                    <div class="info"><div>需求金额 · 抵押贷 / 信用贷 / 税票贷</div></div>
                 </div>
                 <div class="meta-row">
-                    <div class="meta-item"><div class="meta-dot green"></div>完全准入</div>
-                    <div class="meta-item">跟进中</div>
-                    <div class="meta-item">更新于 07-10 14:02</div>
-                    <span class="follow-hint">去跟进</span>
+                    <div class="meta-item"><div class="meta-dot md-green"></div>完全准入</div>
+                    <div class="meta-item">· 跟进中</div>
+                    <div class="meta-item">· 更新于 07-10 14:02</div>
+                    <span class="follow-badge">去跟进</span>
                 </div>
                 <div class="cus-footer">
-                    <div class="follower">
-                        <div class="follower-avatar">周</div>
-                        周林科
-                    </div>
+                    <div class="follower"><div class="avo">周</div>周林科</div>
                     <button class="contact-btn">联系客户</button>
                 </div>
             </div>
+
+            <!-- 6. 优必选 -->
+            <div class="cus-card">
+                <div class="cus-header">
+                    <div class="cus-name">深圳市优必选科技股份有限公司</div>
+                    <span class="cus-status st-new">新入库</span>
+                </div>
+                <div class="company-tags">
+                    <span class="ctag">在营</span><span class="ctag">KP联系人</span>
+                    <span class="ctag impt">A级纳税人</span><span class="ctag">一般纳税人</span>
+                    <span class="ctag impt">专精特新企业</span><span class="ctag">创新型中小企业</span>
+                    <span class="ctag impt">独角兽企业</span><span class="ctag impt">瞪羚企业</span>
+                    <span class="ctag impt">高新企业</span><span class="ctag">规模以上服务业</span>
+                </div>
+                <div class="meta-row">
+                    <div class="meta-item"><div class="meta-dot md-green"></div>完全准入</div>
+                    <div class="meta-item">· 跟进中</div>
+                    <div class="meta-item">· 抵押贷 / 信用贷 / 税票贷</div>
+                    <div class="meta-item">· 更新于 07-10 13:59</div>
+                    <span class="follow-badge">去跟进</span>
+                </div>
+                <div class="cus-footer">
+                    <div class="follower"><div class="avo">周</div>周林科</div>
+                    <button class="contact-btn">联系客户</button>
+                </div>
+            </div>
+
         </div>
 
         <!-- Tab Bar -->
@@ -480,16 +418,8 @@
             <div class="tab-item"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="tab-label">我的</span></div>
         </nav>
     </div>
-
     <script>
-    document.querySelectorAll('.cus-card, .stat-card, .saved-tag, .tab-item').forEach(function(el) {
-        el.addEventListener('click', function() {
-            if (this.classList.contains('tab-item')) {
-                document.querySelectorAll('.tab-item').forEach(function(t) { t.classList.remove('active'); });
-                this.classList.add('active');
-            }
-        });
-    });
+    document.querySelectorAll('.tab-item').forEach(function(t){t.onclick=function(){document.querySelectorAll('.tab-item').forEach(function(x){x.classList.remove('active')});this.classList.add('active');};});
     console.log('Zeus 客户管理 已就绪');
     </script>
 </body>
