@@ -1,326 +1,349 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,viewport-fit=cover">
-    <title>客户管理 - Zeus</title>
-    <style>
-        :root {
-            --primary:#F19871;--primary-dark:#E8865A;--primary-light:#FFF0EA;
-            --text:#1D1D1F;--text-secondary:#86868B;--text-muted:#C7C7CC;
-            --border:#F0F0F2;--bg:#F5F5F7;--white:#fff;
-            --green:#34C759;--blue:#4A90D9;--orange:#F5A623;--red:#FF3B30;--purple:#7C6FF7;
-        }
-        *{margin:0;padding:0;box-sizing:border-box}
-        html,body{
-            width:100%;min-height:100vh;background:var(--bg);
-            font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
-            -webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;overflow-x:hidden;
-        }
-        .page{width:100%;max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:80px}
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,viewport-fit=cover"><title>客户管理 - Zeus</title>
+<style>
+:root {
+    --p:#F19871;--pd:#E8865A;--pl:#FFF0EA;
+    --t:#1D1D1F;--ts:#86868B;--tm:#C7C7CC;
+    --br:#F0F0F2;--bg:#F5F5F7;--w:#fff;
+    --g:#34C759;--bl:#4A90D9;--o:#F5A623;--r:#FF3B30;--pu:#7C6FF7;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100vh;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.page{width:100%;max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:80px}
 
-        /* Top Bar */
-        .top-bar{
-            background:var(--white);padding:8px 10px;
-            display:flex;align-items:center;gap:4px;
-            position:sticky;top:0;z-index:100;
-            box-shadow:0 1px 3px rgba(0,0,0,0.03);
-        }
-        .top-bar .title{font-size:16px;font-weight:700;color:var(--text);white-space:nowrap;flex-shrink:0;margin-right:2px}
-        .search-wrap{flex:1;position:relative;min-width:0;margin:0 4px}
-        .search-wrap input{
-            width:100%;height:34px;padding:0 12px 0 32px;
-            border:none;border-radius:17px;background:#F5F5F7;
-            font-size:13px;color:var(--text);outline:none;font-family:inherit;
-        }
-        .search-wrap input::placeholder{color:var(--text-muted)}
-        .search-icon{
-            position:absolute;left:9px;top:50%;transform:translateY(-50%);
-            width:15px;height:15px;stroke:#C7C7CC;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;
-        }
-        .tb{
-            width:32px;height:32px;border-radius:8px;background:var(--white);
-            display:flex;align-items:center;justify-content:center;
-            flex-shrink:0;cursor:pointer;
-        }
-        .tb:active{background:#F5F5F7}
-        .tb svg{width:17px;height:17px;stroke:var(--text-secondary);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* Top Bar */
+.top-bar{background:var(--w);padding:8px 10px;display:flex;align-items:center;gap:4px;position:sticky;top:0;z-index:100;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+.title{font-size:16px;font-weight:700;color:var(--t);flex-shrink:0;margin-right:2px}
+.search-wrap{flex:1;position:relative;min-width:0;margin:0 4px}
+.search-wrap input{width:100%;height:34px;padding:0 12px 0 30px;border:none;border-radius:17px;background:#F5F5F7;font-size:13px;color:var(--t);outline:none;font-family:inherit}
+.search-wrap input::placeholder{color:var(--tm)}
+.si{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--tm);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.tb{width:32px;height:32px;border-radius:8px;background:var(--w);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer}
+.tb:active{background:#F5F5F7}
+.tb svg{width:17px;height:17px;stroke:var(--ts);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-        /* Stats */
-        .stats-row{display:flex;gap:8px;padding:10px 10px 6px}
-        .stat-card{flex:1;padding:14px 12px;border-radius:14px;cursor:pointer;transition:transform 0.15s}
-        .stat-card:active{transform:scale(0.96)}
-        .stat-card.progress{background:var(--primary-light)}
-        .stat-card.follow{background:#EBF5FF}
-        .stat-card.pending{background:#F0ECFF}
-        .stat-num{font-size:26px;font-weight:700}
-        .stat-card.progress .stat-num{color:var(--primary)}
-        .stat-card.follow .stat-num{color:var(--blue)}
-        .stat-card.pending .stat-num{color:var(--purple)}
-        .stat-label{font-size:11px;color:var(--text-secondary);margin-top:1px}
+/* Stats */
+.sr{display:flex;gap:8px;padding:10px 10px 6px}
+.sc{flex:1;padding:14px 12px;border-radius:14px;cursor:pointer;transition:transform .15s}
+.sc:active{transform:scale(.96)}
+.sc.pg{background:var(--pl)} .sc.fl{background:#EBF5FF} .sc.pd2{background:#F0ECFF}
+.sn{font-size:26px;font-weight:700}
+.sc.pg .sn{color:var(--p)} .sc.fl .sn{color:var(--bl)} .sc.pd2 .sn{color:var(--pu)}
+.sl{font-size:11px;color:var(--ts);margin-top:1px}
 
-        /* Saved Tags */
-        .tags-scroll{padding:6px 10px 8px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-        .tags-scroll::-webkit-scrollbar{display:none}
-        .htag{padding:5px 13px;border-radius:15px;font-size:12px;white-space:nowrap;cursor:pointer;flex-shrink:0;border:1px solid var(--border);color:var(--text-secondary);background:var(--white)}
-        .htag:active{background:var(--primary-light);border-color:var(--primary);color:var(--primary)}
+/* Tags */
+.tgs{padding:6px 10px 8px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tgs::-webkit-scrollbar{display:none}
+.ht{padding:5px 13px;border-radius:15px;font-size:12px;white-space:nowrap;cursor:pointer;flex-shrink:0;border:1px solid var(--br);color:var(--ts);background:var(--w)}
+.ht:active{background:var(--pl);border-color:var(--p);color:var(--p)}
 
-        /* Result */
-        .result-bar{display:flex;align-items:center;justify-content:space-between;padding:6px 10px 8px}
-        .result-count{font-size:12px;color:var(--text-secondary)}
-        .result-count span{color:var(--primary);font-weight:600}
-        .sort-btn{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--text-secondary);cursor:pointer}
-        .sort-btn svg{width:13px;height:13px;stroke:var(--text-secondary);fill:none;stroke-width:2}
+.rbar{display:flex;align-items:center;justify-content:space-between;padding:6px 10px 8px}
+.rcount{font-size:12px;color:var(--ts)} .rcount span{color:var(--p);font-weight:600}
+.sort{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--ts);cursor:pointer}
+.sort svg{width:13px;height:13px;stroke:var(--ts);fill:none;stroke-width:2}
 
-        /* Customer Card */
-        .card-list{padding:0 10px}
-        .cus-card{background:var(--white);border-radius:14px;padding:14px;margin-bottom:8px;box-shadow:0 1px 6px rgba(0,0,0,0.03)}
+/* Card */
+.cl{padding:0 10px}
+.card{background:var(--w);border-radius:16px;padding:16px;margin-bottom:10px;box-shadow:0 1px 6px rgba(0,0,0,.04)}
+.ch{display:flex;align-items:flex-start;margin-bottom:10px}
+.av{width:44px;height:44px;border-radius:14px;flex-shrink:0;margin-right:12px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff}
+.ave{background:linear-gradient(135deg,var(--p),var(--pd))}
+.avm{background:var(--bl)}
+.avw{background:#FF6B81}
+.ci{flex:1;min-width:0;padding-top:2px}
+.cnr{display:flex;align-items:flex-start;justify-content:space-between}
+.cn{font-size:16px;font-weight:700;color:var(--t);line-height:1.3}
+.cst{padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap;flex-shrink:0}
+.sti{background:var(--pl);color:var(--p)}
+.stn{background:#EBF5FF;color:var(--bl)}
 
-        .cus-header{display:flex;align-items:flex-start;margin-bottom:8px}
-        .cus-avo{
-            width:42px;height:42px;border-radius:12px;flex-shrink:0;margin-right:10px;
-            display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;
-        }
-        .av-ent{background:linear-gradient(135deg,var(--primary),var(--primary-dark))}
-        .av-man{background:#4A90D9}
-        .av-woman{background:#FF6B81}
-        .cus-info{flex:1;min-width:0}
-        .cus-name-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
-        .cus-name{font-size:15px;font-weight:600;color:var(--text);line-height:1.3}
-        .cus-status{padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap;flex-shrink:0;margin-left:8px}
-        .st-intent{background:var(--primary-light);color:var(--primary)}
-        .st-new{background:#EBF5FF;color:var(--blue)}
+.utags{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 8px}
+.ut{padding:3px 8px;border-radius:5px;font-size:10px;font-weight:500;background:#F5F5F7;color:var(--ts)}
+.ut.hl{background:var(--pl);color:var(--p)}
+.ut.at{background:#F0FFF4;color:#15803D}
 
-        .etags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
-        .etag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:500;background:#F5F5F7;color:var(--text-secondary)}
-        .etag.hl{background:var(--primary-light);color:var(--primary)}
-        .atags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
-        .atag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:500;background:#F0FFF4;color:#15803D}
+.metrics{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:8px}
+.mn{font-size:20px;font-weight:700;color:var(--p)}
+.mn small{font-size:12px;font-weight:500}
+.mv{font-size:12px;color:var(--ts)}
+.mv strong{color:var(--p);font-weight:600}
 
-        .amount-box{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:10px 12px;background:#FFF8F5;border-radius:10px}
-        .amount-box .amount{font-size:20px;font-weight:700;color:var(--primary);flex-shrink:0}
-        .amount-box .amount small{font-size:12px;font-weight:500}
-        .amount-box .info{flex:1;font-size:11px;color:var(--text-secondary);line-height:1.5}
-        .amount-box .info div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sub{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-size:11px;color:var(--ts);margin-bottom:8px}
+.dot{width:4px;height:4px;border-radius:50%;background:var(--g);flex-shrink:0}
+.sep{color:var(--tm)}
+.fb{font-size:10px;color:#FF9500;background:#FFF7E6;padding:3px 10px;border-radius:10px;font-weight:500;flex-shrink:0}
 
-        .person-fin{display:flex;flex-wrap:wrap;gap:4px 16px;margin-bottom:8px;padding:8px 10px;background:#FFF8F5;border-radius:8px;font-size:11px;color:var(--text-secondary)}
-        .person-fin span{font-weight:500;color:var(--primary)}
+.fn{padding:8px 0;font-size:11px;color:var(--tm);line-height:1.5;max-height:30px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;cursor:pointer;margin-bottom:8px;border-bottom:1px solid var(--br);padding-bottom:10px}
+.fn:active{color:var(--ts)}
 
-        .date-row{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;font-size:11px;color:var(--text-secondary);margin-bottom:6px}
-        .follow-badge{font-size:10px;color:#FF9500;background:#FFF7E6;padding:2px 8px;border-radius:8px;font-weight:500}
+.cf{display:flex;align-items:center;gap:10px}
+.fw{font-size:12px;color:var(--ts);display:flex;align-items:center;gap:6px;flex-shrink:0}
+.fa{width:26px;height:26px;border-radius:50%;background:var(--p);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.cb{flex:1;padding:9px 0;border-radius:18px;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--p),var(--pd));text-align:center}
+.cb:active{opacity:.8}
 
-        .follow-note{padding:8px 10px;margin-bottom:8px;background:#F9F9FB;border-radius:8px;font-size:11px;color:var(--text-secondary);line-height:1.5;max-height:44px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-        .follow-note .fn-label{color:var(--text-muted);margin-right:4px}
+/* Popup */
+.overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.4);align-items:flex-end;justify-content:center}
+.overlay.show{display:flex}
+.popup{width:100%;max-width:480px;max-height:65vh;background:var(--w);border-radius:20px 20px 0 0;padding:24px 20px 30px;overflow-y:auto;animation:su .3s cubic-bezier(.22,.61,.36,1)}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.popup h3{font-size:17px;font-weight:700;color:var(--t);margin-bottom:14px}
+.popup .pb{font-size:14px;color:var(--ts);line-height:1.9;word-break:break-all}
+.popup .pc{display:block;margin:18px auto 0;width:130px;height:40px;border-radius:20px;border:none;background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.popup .pc:active{opacity:.8}
 
-        .card-meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-size:11px;color:var(--text-secondary);padding-top:8px;border-top:1px solid var(--border);margin-bottom:8px}
-        .mdot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-        .md-green{background:var(--green)}
-
-        .cus-footer{display:flex;align-items:center;justify-content:space-between}
-        .follower{font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:5px}
-        .fav{width:20px;height:20px;border-radius:50%;background:var(--primary);color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center}
-        .cbtn{padding:7px 18px;border-radius:16px;border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary-dark))}
-        .cbtn:active{opacity:0.8}
-
-        /* Tab Bar */
-        .tab-bar{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;background:rgba(255,255,255,0.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;border-top:0.5px solid var(--border);padding:4px 0 env(safe-area-inset-bottom,8px);z-index:100}
-        .ti{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:6px 0 2px}
-        .ti svg{width:24px;height:24px;stroke:#8E8E93;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-        .ti.cur svg{stroke:var(--primary)}
-        .tl{font-size:10px;color:#8E8E93}
-        .ti.cur .tl{color:var(--primary)}
-
-        @media(min-width:480px){body{background:#ECECF0}.page{box-shadow:0 12px 40px rgba(0,0,0,0.1)}}
-    </style>
+/* Tab Bar */
+.tbar{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;background:rgba(255,255,255,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;border-top:.5px solid var(--br);padding:4px 0 env(safe-area-inset-bottom,8px);z-index:100}
+.ti{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:6px 0 2px}
+.ti svg{width:24px;height:24px;stroke:#8E8E93;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ti.cur svg{stroke:var(--p)} .tl{font-size:10px;color:#8E8E93} .ti.cur .tl{color:var(--p)}
+@media(min-width:480px){body{background:#ECECF0}.page{box-shadow:0 12px 40px rgba(0,0,0,.1)}}
+</style>
 </head>
 <body>
 <div class="page">
 
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="title">我的客户</div>
-        <div class="tb"><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg></div>
-        <div class="search-wrap">
-            <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" placeholder="请输入姓名/企业全称">
-        </div>
-        <div class="tb" title="批量"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg></div>
-        <div class="tb" title="群呼"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
-        <div class="tb" title="设置"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
-        <div class="tb" title="新建"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-        <div class="tb" title="更多"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></div>
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="title">我的客户</div>
+    <div class="tb"><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg></div>
+    <div class="search-wrap">
+        <svg class="si" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="请输入姓名/企业全称">
     </div>
-
-    <!-- Stats -->
-    <div class="stats-row">
-        <div class="stat-card progress"><div class="stat-num">12</div><div class="stat-label">进行中</div></div>
-        <div class="stat-card follow"><div class="stat-num">10</div><div class="stat-label">待跟进</div></div>
-        <div class="stat-card pending"><div class="stat-num">8</div><div class="stat-label">待处理</div></div>
-    </div>
-
-    <!-- Tags -->
-    <div class="tags-scroll">
-        <span class="htag">我的客户</span><span class="htag">长沙</span><span class="htag">广州·疑似记账代理</span><span class="htag">广州·风险+沉默</span><span class="htag">新建小巨人</span><span class="htag">小蓝本1</span><span class="htag">测试</span>
-    </div>
-
-    <!-- Result -->
-    <div class="result-bar">
-        <div class="result-count">为您筛选到 <span>120,312</span> 条相关结果</div>
-        <div class="sort-btn">默认排序 <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-    </div>
-
-    <!-- Cards -->
-    <div class="card-list">
-
-        <!-- 1. 龙媛 · 女 -->
-        <div class="cus-card">
-            <div class="cus-header">
-                <div class="cus-avo av-woman">龙</div>
-                <div class="cus-info">
-                    <div class="cus-name-row"><div class="cus-name">龙媛</div><span class="cus-status st-new">新入库</span></div>
-                </div>
-            </div>
-            <div class="amount-box"><div class="amount">0.01<small>万</small></div><div class="info"><div>需求金额 · 贷款类型：未知</div><div>代发工资 10,000 元</div></div></div>
-            <div class="date-row"><div>更新时间：2026-07-20 09:48</div><div>下次跟进时间：3天后</div><span class="follow-badge">3天后</span></div>
-            <div class="follow-note"><span class="fn-label">最新跟进：</span>打开 Chrome → 设置语言为中文 → 重启 → GitHub 自动显示中文</div>
-            <div class="card-meta"><div class="mdot md-green"></div>完全准入 · 待结算</div>
-            <div class="cus-footer"><div class="follower"><div class="fav">周</div>周林科</div><button class="cbtn">联系客户</button></div>
-        </div>
-
-        <!-- 2. 赵明路 · 男 -->
-        <div class="cus-card">
-            <div class="cus-header">
-                <div class="cus-avo av-man">周</div>
-                <div class="cus-info">
-                    <div class="cus-name-row"><div class="cus-name">赵明路</div><span class="cus-status st-new">新入库</span></div>
-                    <div class="atags"><span class="atag">房产</span><span class="atag">代发</span><span class="atag">公积金</span><span class="atag">社保</span></div>
-                </div>
-            </div>
-            <div class="date-row"><div>更新时间：2026-07-20 09:23</div><div>下次跟进时间：2天后</div><span class="follow-badge">2天后</span></div>
-            <div class="person-fin"><div>贷款类型：<span>抵押贷</span></div><div>工作单位类型：<span>事业单位</span></div><div>公积金基数：<span>8,000 元</span></div><div>代发工资：<span>20,000 元</span></div></div>
-            <div class="follow-note"><span class="fn-label">最新跟进：</span>顶部搜索栏有筛选图标 + 搜索框 + 更多操作，客户卡片全部包含原始数据。</div>
-            <div class="card-meta"><div class="mdot md-green"></div>完全准入 · 跟进中</div>
-            <div class="cus-footer"><div class="follower"><div class="fav">周</div>周林科</div><button class="cbtn">联系客户</button></div>
-        </div>
-
-        <!-- 3. 比亚迪 · 企业 -->
-        <div class="cus-card">
-            <div class="cus-header">
-                <div class="cus-avo av-ent">比</div>
-                <div class="cus-info">
-                    <div class="cus-name-row"><div class="cus-name">比亚迪汽车工业有限公司</div><span class="cus-status st-intent">有意向</span></div>
-                    <div class="etags">
-                        <span class="etag">在营</span><span class="etag">KP联系人</span><span class="etag hl">A级纳税人</span><span class="etag">一般纳税人</span><span class="etag hl">高新企业</span><span class="etag">战略投资</span><span class="etag">企业技术中心</span><span class="etag">规模以上工业</span><span class="etag">有厂房</span>
-                    </div>
-                    <div class="atags"><span class="atag">房产</span><span class="atag">代发</span><span class="atag">公积金</span><span class="atag">社保</span><span class="atag">有车</span><span class="atag">有保单</span></div>
-                </div>
-            </div>
-            <div class="amount-box"><div class="amount">500<small>万</small></div><div class="info"><div>需求金额 · 抵押贷</div><div>近一年纳税 8,910万 · 近一年开票 500万</div></div></div>
-            <div class="date-row"><div>更新时间：2026-07-20 09:08</div><div>下次跟进时间：1天后</div><span class="follow-badge">1天后</span></div>
-            <div class="follow-note"><span class="fn-label">最新跟进：</span>后端：规则列表分页接口、规则详情接口、新增规则接口（含5项校验+来源去重+动态注册定时任务）、更新规则接口、启用/禁用规则接口、逻辑删除规则接口、规则下拉列表接口、日志分页查询接口、流转规则开发、重启服务注册所有定时任务、新增立即触发流转规则接口</div>
-            <div class="card-meta"><div class="mdot md-green"></div>完全准入 · 跟进中</div>
-            <div class="cus-footer"><div class="follower"><div class="fav">周</div>周林科</div><button class="cbtn">联系客户</button></div>
-        </div>
-
-        <!-- 4. 晨北 · 企业 -->
-        <div class="cus-card">
-            <div class="cus-header">
-                <div class="cus-avo av-ent">晨</div>
-                <div class="cus-info">
-                    <div class="cus-name-row"><div class="cus-name">深圳市晨北科技有限公司</div><span class="cus-status st-new">新入库</span></div>
-                    <div class="etags"><span class="etag">在营</span><span class="etag">KP联系人</span><span class="etag hl">A级纳税人</span><span class="etag">一般纳税人</span><span class="etag hl">高新企业</span><span class="etag">IPO</span><span class="etag">限额以上批发和零售业</span></div>
-                </div>
-            </div>
-            <div class="amount-box"><div class="amount">500<small>万</small></div><div class="info"><div>需求金额 · 信用贷 / 抵押贷 / 税票贷</div></div></div>
-            <div class="date-row"><div>更新时间：2026-07-10 15:21</div><div>下次跟进时间：去跟进▶</div><span class="follow-badge">去跟进</span></div>
-            <div class="card-meta"><div class="mdot md-green"></div>完全准入 · 跟进中</div>
-            <div class="cus-footer"><div class="follower"><div class="fav">周</div>周林科</div><button class="cbtn">联系客户</button></div>
-        </div>
-
-        <!-- 5. 晶泰 · 企业 -->
-        <div class="cus-card">
-            <div class="cus-header">
-                <div class="cus-avo av-ent">晶</div>
-                <div class="cus-info">
-                    <div class="cus-name-row"><div class="cus-name">深圳晶泰科技有限公司</div><span class="cus-status st-new">新入库</span></div>
-                    <div class="etags"><span class="etag hl">专精特新</span><span class="etag">小微企业</span><span class="etag">科技型中小企业</span><span class="etag hl">独角兽</span><span class="etag hl">高新企业</span><span class="etag">C轮及以上</span></div>
-                </div>
-            </div>
-            <div class="date-row"><div>更新时间：2026-07-10 14:19</div><span class="follow-badge">去跟进</span></div>
-            <div class="card-meta"><div class="mdot md-green"></div>完全准入 · 跟进中 · 贷款类型：未知</div>
-            <div class="cus-footer"><div class="follower"><div class="fav">周</div>周林科</div><button class="cbtn">联系客户</button></div>
-        </div>
-
-        <!-- 6. 盈富斯 · 企业 -->
-        <div class="cus-card">
-            <div class="cus-header">
-                <div class="cus-avo av-ent">盈</div>
-                <div class="cus-info">
-                    <div class="cus-name-row"><div class="cus-name">深圳盈富斯科技有限公司</div><span class="cus-status st-new">新入库</span></div>
-                    <div class="etags"><span class="etag">在营</span><span class="etag">KP联系人</span><span class="etag hl">A级纳税人</span><span class="etag">一般纳税人</span><span class="etag hl">独角兽企业</span><span class="etag hl">高新企业</span><span class="etag">C轮及以上</span><span class="etag">规模以上服务业</span></div>
-                </div>
-            </div>
-            <div class="date-row"><div>更新时间：2026-07-10 14:11</div><span class="follow-badge">去跟进</span></div>
-            <div class="card-meta"><div class="mdot md-green"></div>完全准入 · 跟进中 · 贷款类型：未知</div>
-            <div class="cus-footer"><div class="follower"><div class="fav">周</div>周林科</div><button class="cbtn">联系客户</button></div>
-        </div>
-
-        <!-- 7. 大疆 · 企业 -->
-        <div class="cus-card">
-            <div class="cus-header">
-                <div class="cus-avo av-ent">大</div>
-                <div class="cus-info">
-                    <div class="cus-name-row"><div class="cus-name">深圳市大疆创新科技有限公司</div><span class="cus-status st-new">新入库</span></div>
-                    <div class="etags"><span class="etag">在营</span><span class="etag">KP联系人</span><span class="etag hl">A级纳税人</span><span class="etag">一般纳税人</span><span class="etag hl">独角兽企业</span><span class="etag hl">瞪羚企业</span><span class="etag hl">高新企业</span><span class="etag hl">500强企业</span><span class="etag">企业技术中心</span><span class="etag">规模以上工业</span><span class="etag">战略投资</span><span class="etag">技术创新示范企业</span></div>
-                </div>
-            </div>
-            <div class="amount-box"><div class="amount">500<small>万</small></div><div class="info"><div>需求金额 · 抵押贷 / 信用贷 / 税票贷</div></div></div>
-            <div class="date-row"><div>更新时间：2026-07-10 14:02</div><span class="follow-badge">去跟进</span></div>
-            <div class="card-meta"><div class="mdot md-green"></div>完全准入 · 跟进中</div>
-            <div class="cus-footer"><div class="follower"><div class="fav">周</div>周林科</div><button class="cbtn">联系客户</button></div>
-        </div>
-
-        <!-- 8. 优必选 · 企业 -->
-        <div class="cus-card">
-            <div class="cus-header">
-                <div class="cus-avo av-ent">优</div>
-                <div class="cus-info">
-                    <div class="cus-name-row"><div class="cus-name">深圳市优必选科技股份有限公司</div><span class="cus-status st-new">新入库</span></div>
-                    <div class="etags"><span class="etag">在营</span><span class="etag">KP联系人</span><span class="etag hl">A级纳税人</span><span class="etag">一般纳税人</span><span class="etag hl">专精特新企业</span><span class="etag">创新型中小企业</span><span class="etag hl">独角兽企业</span><span class="etag hl">瞪羚企业</span><span class="etag hl">高新企业</span><span class="etag">规模以上服务业</span></div>
-                </div>
-            </div>
-            <div class="date-row"><div>更新时间：2026-07-10 13:59</div><span class="follow-badge">去跟进</span></div>
-            <div class="card-meta"><div class="mdot md-green"></div>完全准入 · 跟进中 · 抵押贷 / 信用贷 / 税票贷</div>
-            <div class="cus-footer"><div class="follower"><div class="fav">周</div>周林科</div><button class="cbtn">联系客户</button></div>
-        </div>
-
-        <!-- 9. 万魔声学 · 企业 -->
-        <div class="cus-card">
-            <div class="cus-header">
-                <div class="cus-avo av-ent">万</div>
-                <div class="cus-info">
-                    <div class="cus-name-row"><div class="cus-name">万魔声学股份有限公司</div><span class="cus-status st-new">新入库</span></div>
-                    <div class="etags"><span class="etag">在营</span><span class="etag">KP联系人</span><span class="etag hl">A级纳税人</span><span class="etag">一般纳税人</span><span class="etag hl">专精特新企业</span><span class="etag hl">专精特新小巨人</span><span class="etag hl">高新企业</span><span class="etag">收购/并购</span><span class="etag">限额以上批发和零售业</span></div>
-                </div>
-            </div>
-            <div class="date-row"><div>更新时间：2026-07-10 10:53</div><span class="follow-badge">去跟进</span></div>
-            <div class="card-meta"><div class="mdot md-green"></div>完全准入 · 跟进中 · 贷款类型：未知</div>
-            <div class="cus-footer"><div class="follower"><div class="fav">周</div>周林科</div><button class="cbtn">联系客户</button></div>
-        </div>
-
-    </div>
-
-    <!-- Tab Bar -->
-    <nav class="tab-bar">
-        <div class="ti"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="tl">首页</span></div>
-        <div class="ti cur"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-3-3.87"/><circle cx="12" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="18" cy="7" r="4"/></svg><span class="tl">客户管理</span></div>
-        <div class="ti"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span class="tl">拓客空间</span></div>
-        <div class="ti"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><span class="tl">产品管理</span></div>
-        <div class="ti"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="tl">我的</span></div>
-    </nav>
+    <div class="tb" title="批量"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg></div>
+    <div class="tb" title="群呼"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+    <div class="tb" title="设置"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+    <div class="tb" title="新建"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+    <div class="tb" title="更多"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></div>
 </div>
+
+<!-- Stats -->
+<div class="sr">
+    <div class="sc pg"><div class="sn">12</div><div class="sl">进行中</div></div>
+    <div class="sc fl"><div class="sn">10</div><div class="sl">待跟进</div></div>
+    <div class="sc pd2"><div class="sn">8</div><div class="sl">待处理</div></div>
+</div>
+
+<!-- Tags -->
+<div class="tgs">
+    <span class="ht">我的客户</span><span class="ht">长沙</span><span class="ht">广州·疑似记账代理</span><span class="ht">广州·风险+沉默</span><span class="ht">新建小巨人</span><span class="ht">小蓝本1</span><span class="ht">测试</span>
+</div>
+
+<!-- Result -->
+<div class="rbar">
+    <div class="rcount">为您筛选到 <span>120,312</span> 条相关结果</div>
+    <div class="sort">默认排序 <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+</div>
+
+<!-- Cards -->
+<div class="cl">
+
+    <!-- 1. 晨北科技 -->
+    <div class="card">
+        <div class="ch">
+            <div class="av ave">晨</div>
+            <div class="ci">
+                <div class="cnr"><div class="cn">深圳市晨北科技有限公司</div><span class="cst stn">新入库</span></div>
+                <div class="utags">
+                    <span class="ut">在营</span><span class="ut">KP联系人</span><span class="ut hl">A级纳税人</span><span class="ut">一般纳税人</span><span class="ut hl">高新企业</span><span class="ut">IPO</span><span class="ut">限额以上批发和零售业</span>
+                    <span class="ut at">房产</span><span class="ut at">公积金</span><span class="ut at">社保</span><span class="ut at">纳税</span>
+                </div>
+            </div>
+        </div>
+        <div class="metrics">
+            <div class="mn">500<small>万</small></div>
+            <div class="mv">需求金额 · 信用贷/抵押贷/税票贷</div>
+            <div class="mv">近一年纳税 <strong>900万</strong> · 开票 <strong>888万</strong></div>
+        </div>
+        <div class="sub">
+            <div class="dot"></div>完全准入 · 跟进中<span class="sep"> | </span>07-20 10:39<span class="sep"> | </span><span class="fb">去跟进</span>
+        </div>
+        <div class="cf"><div class="fw"><div class="fa">周</div>周林科</div><button class="cb">联系客户</button></div>
+    </div>
+
+    <!-- 2. 龙媛 -->
+    <div class="card">
+        <div class="ch">
+            <div class="av avw">龙</div>
+            <div class="ci">
+                <div class="cnr"><div class="cn">龙媛</div><span class="cst stn">新入库</span></div>
+            </div>
+        </div>
+        <div class="metrics">
+            <div class="mn">0.01<small>万</small></div>
+            <div class="mv">需求金额 · 贷款类型未知</div>
+            <div class="mv">代发工资 <strong>10,000 元</strong></div>
+        </div>
+        <div class="sub">
+            <div class="dot"></div>完全准入 · 待结算<span class="sep"> | </span>07-20 09:48<span class="sep"> | </span><span class="fb">3天后跟进</span>
+        </div>
+        <div class="fn">打开 Chrome → 设置语言为中文 → 重启 → GitHub 自动显示中文</div>
+        <div class="cf"><div class="fw"><div class="fa">周</div>周林科</div><button class="cb">联系客户</button></div>
+    </div>
+
+    <!-- 3. 赵明路 -->
+    <div class="card">
+        <div class="ch">
+            <div class="av avm">周</div>
+            <div class="ci">
+                <div class="cnr"><div class="cn">赵明路</div><span class="cst stn">新入库</span></div>
+                <div class="utags">
+                    <span class="ut at">房产</span><span class="ut at">代发</span><span class="ut at">公积金</span><span class="ut at">社保</span>
+                </div>
+            </div>
+        </div>
+        <div class="metrics">
+            <div class="mv">贷款类型 <strong>抵押贷</strong></div>
+            <div class="mv">工作单位 <strong>事业单位</strong></div>
+            <div class="mv">公积金基数 <strong>8,000 元</strong></div>
+            <div class="mv">代发工资 <strong>20,000 元</strong></div>
+        </div>
+        <div class="sub">
+            <div class="dot"></div>完全准入 · 跟进中<span class="sep"> | </span>07-20 09:23<span class="sep"> | </span><span class="fb">2天后跟进</span>
+        </div>
+        <div class="fn">顶部搜索栏有筛选图标 + 搜索框 + 更多操作，客户卡片全部包含原始数据。</div>
+        <div class="cf"><div class="fw"><div class="fa">周</div>周林科</div><button class="cb">联系客户</button></div>
+    </div>
+
+    <!-- 4. 比亚迪 -->
+    <div class="card">
+        <div class="ch">
+            <div class="av ave">比</div>
+            <div class="ci">
+                <div class="cnr"><div class="cn">比亚迪汽车工业有限公司</div><span class="cst sti">有意向</span></div>
+                <div class="utags">
+                    <span class="ut">在营</span><span class="ut">KP联系人</span><span class="ut hl">A级纳税人</span><span class="ut">一般纳税人</span><span class="ut hl">高新企业</span><span class="ut">战略投资</span><span class="ut">企业技术中心</span><span class="ut">规模以上工业</span><span class="ut">有厂房</span>
+                    <span class="ut at">房产</span><span class="ut at">代发</span><span class="ut at">公积金</span><span class="ut at">社保</span><span class="ut at">有车</span><span class="ut at">有保单</span>
+                </div>
+            </div>
+        </div>
+        <div class="metrics">
+            <div class="mn">500<small>万</small></div>
+            <div class="mv">需求金额 · 抵押贷</div>
+            <div class="mv">近一年纳税 <strong>8,910万</strong> · 开票 <strong>500万</strong></div>
+        </div>
+        <div class="sub">
+            <div class="dot"></div>完全准入 · 跟进中<span class="sep"> | </span>07-20 09:08<span class="sep"> | </span><span class="fb">1天后跟进</span>
+        </div>
+        <div class="fn">后端：规则列表分页接口、规则详情接口、新增规则接口（含5项校验）、更新规则接口、启用禁用规则接口、逻辑删除规则接口、规则下拉列表接口、日志分页查询接口、流转规则开发、重启服务注册定时任务、新增立即触发流转规则接口</div>
+        <div class="cf"><div class="fw"><div class="fa">周</div>周林科</div><button class="cb">联系客户</button></div>
+    </div>
+
+    <!-- 5. 晶泰 -->
+    <div class="card">
+        <div class="ch">
+            <div class="av ave">晶</div>
+            <div class="ci">
+                <div class="cnr"><div class="cn">深圳晶泰科技有限公司</div><span class="cst stn">新入库</span></div>
+                <div class="utags">
+                    <span class="ut hl">专精特新</span><span class="ut">小微企业</span><span class="ut">科技型中小企业</span><span class="ut hl">独角兽</span><span class="ut">其他</span><span class="ut hl">高新</span>
+                </div>
+            </div>
+        </div>
+        <div class="sub">
+            <div class="dot"></div>完全准入 · 跟进中 · 贷款类型未知<span class="sep"> | </span>07-10 14:19<span class="sep"> | </span><span class="fb">去跟进</span>
+        </div>
+        <div class="cf"><div class="fw"><div class="fa">周</div>周林科</div><button class="cb">联系客户</button></div>
+    </div>
+
+    <!-- 6. 盈富斯 -->
+    <div class="card">
+        <div class="ch">
+            <div class="av ave">盈</div>
+            <div class="ci">
+                <div class="cnr"><div class="cn">深圳盈富斯科技有限公司</div><span class="cst stn">新入库</span></div>
+                <div class="utags">
+                    <span class="ut">在营</span><span class="ut">KP联系人</span><span class="ut hl">A级纳税人</span><span class="ut">一般纳税人</span><span class="ut hl">独角兽企业</span><span class="ut hl">高新企业</span><span class="ut">C轮及以上</span><span class="ut">规模以上服务业</span>
+                </div>
+            </div>
+        </div>
+        <div class="sub">
+            <div class="dot"></div>完全准入 · 跟进中 · 贷款类型未知<span class="sep"> | </span>07-10 14:11<span class="sep"> | </span><span class="fb">去跟进</span>
+        </div>
+        <div class="cf"><div class="fw"><div class="fa">周</div>周林科</div><button class="cb">联系客户</button></div>
+    </div>
+
+    <!-- 7. 大疆 -->
+    <div class="card">
+        <div class="ch">
+            <div class="av ave">大</div>
+            <div class="ci">
+                <div class="cnr"><div class="cn">深圳市大疆创新科技有限公司</div><span class="cst stn">新入库</span></div>
+                <div class="utags">
+                    <span class="ut">在营</span><span class="ut">KP联系人</span><span class="ut hl">A级纳税人</span><span class="ut">一般纳税人</span><span class="ut hl">独角兽企业</span><span class="ut hl">瞪羚企业</span><span class="ut hl">高新企业</span><span class="ut hl">500强企业</span><span class="ut">企业技术中心</span><span class="ut">规模以上工业</span><span class="ut">战略投资</span><span class="ut">技术创新示范企业</span>
+                </div>
+            </div>
+        </div>
+        <div class="metrics">
+            <div class="mn">500<small>万</small></div>
+            <div class="mv">需求金额 · 抵押贷/信用贷/税票贷</div>
+        </div>
+        <div class="sub">
+            <div class="dot"></div>完全准入 · 跟进中<span class="sep"> | </span>07-10 14:02<span class="sep"> | </span><span class="fb">去跟进</span>
+        </div>
+        <div class="cf"><div class="fw"><div class="fa">周</div>周林科</div><button class="cb">联系客户</button></div>
+    </div>
+
+    <!-- 8. 优必选 -->
+    <div class="card">
+        <div class="ch">
+            <div class="av ave">优</div>
+            <div class="ci">
+                <div class="cnr"><div class="cn">深圳市优必选科技股份有限公司</div><span class="cst stn">新入库</span></div>
+                <div class="utags">
+                    <span class="ut">在营</span><span class="ut">KP联系人</span><span class="ut hl">A级纳税人</span><span class="ut">一般纳税人</span><span class="ut hl">专精特新企业</span><span class="ut">创新型中小企业</span><span class="ut hl">独角兽企业</span><span class="ut hl">瞪羚企业</span><span class="ut hl">高新企业</span><span class="ut">规模以上服务业</span>
+                </div>
+            </div>
+        </div>
+        <div class="sub">
+            <div class="dot"></div>完全准入 · 跟进中 · 抵押贷/信用贷/税票贷<span class="sep"> | </span>07-10 13:59<span class="sep"> | </span><span class="fb">去跟进</span>
+        </div>
+        <div class="cf"><div class="fw"><div class="fa">周</div>周林科</div><button class="cb">联系客户</button></div>
+    </div>
+
+    <!-- 9. 万魔 -->
+    <div class="card">
+        <div class="ch">
+            <div class="av ave">万</div>
+            <div class="ci">
+                <div class="cnr"><div class="cn">万魔声学股份有限公司</div><span class="cst stn">新入库</span></div>
+                <div class="utags">
+                    <span class="ut">在营</span><span class="ut">KP联系人</span><span class="ut hl">A级纳税人</span><span class="ut">一般纳税人</span><span class="ut hl">专精特新企业</span><span class="ut hl">专精特新小巨人</span><span class="ut hl">高新企业</span><span class="ut">收购/并购</span><span class="ut">限额以上批发和零售业</span>
+                </div>
+            </div>
+        </div>
+        <div class="sub">
+            <div class="dot"></div>完全准入 · 跟进中 · 贷款类型未知<span class="sep"> | </span>07-10 10:53<span class="sep"> | </span><span class="fb">去跟进</span>
+        </div>
+        <div class="cf"><div class="fw"><div class="fa">周</div>周林科</div><button class="cb">联系客户</button></div>
+    </div>
+
+</div>
+
+<!-- Tab Bar -->
+<nav class="tbar">
+    <div class="ti"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="tl">首页</span></div>
+    <div class="ti cur"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-3-3.87"/><circle cx="12" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="18" cy="7" r="4"/></svg><span class="tl">客户管理</span></div>
+    <div class="ti"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span class="tl">拓客空间</span></div>
+    <div class="ti"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><span class="tl">产品管理</span></div>
+    <div class="ti"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="tl">我的</span></div>
+</nav>
+
+<!-- Follow Note Popup -->
+<div class="overlay" id="overlay" onclick="closeNote(event)">
+    <div class="popup" onclick="event.stopPropagation()">
+        <h3>最新跟进记录</h3>
+        <div class="pb" id="noteBody"></div>
+        <button class="pc" onclick="closeNote()">关闭</button>
+    </div>
+</div>
+
 <script>
-document.querySelectorAll('.ti').forEach(function(t){t.onclick=function(){document.querySelectorAll('.ti').forEach(function(x){x.classList.remove('cur')});this.classList.add('cur');};});
+document.querySelectorAll('.ti').forEach(function(t){t.onclick=function(){document.querySelectorAll('.ti').forEach(function(x){x.classList.remove('cur')});this.classList.add('cur')}});
+document.querySelectorAll('.fn').forEach(function(el){el.onclick=function(){document.getElementById('noteBody').textContent=this.textContent;document.getElementById('overlay').classList.add('show')}});
+function closeNote(e){if(e&&e.target!==document.getElementById('overlay'))return;document.getElementById('overlay').classList.remove('show')}
 </script>
 </body>
 </html>
