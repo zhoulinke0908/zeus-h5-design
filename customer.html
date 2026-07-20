@@ -44,23 +44,31 @@
         .tool-btn:active { background:#F5F5F7; }
         .tool-btn svg { width:17px; height:17px; stroke:var(--text-secondary); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 
-        /* ======== Horizontal Tabs ======== */
-        .tabs-scroll {
-            padding:10px 10px 8px; display:flex; gap:6px;
+        /* ======== Stats Cards ======== */
+        .stats-row { display:flex; gap:8px; padding:10px 10px 6px; }
+        .stat-card { flex:1; padding:14px 12px; border-radius:14px; cursor:pointer; transition:transform 0.15s; }
+        .stat-card:active { transform:scale(0.96); }
+        .stat-card.progress { background:var(--primary-light); }
+        .stat-card.follow { background:#EBF5FF; }
+        .stat-card.pending { background:#F0ECFF; }
+        .stat-num { font-size:26px; font-weight:700; }
+        .stat-card.progress .stat-num { color:var(--primary); }
+        .stat-card.follow .stat-num { color:var(--blue); }
+        .stat-card.pending .stat-num { color:var(--purple); }
+        .stat-label { font-size:11px; color:var(--text-secondary); margin-top:1px; }
+
+        /* ======== Saved Search Tags ======== */
+        .tags-scroll {
+            padding:6px 10px 8px; display:flex; gap:6px;
             overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
-            background:var(--white);
         }
-        .tabs-scroll::-webkit-scrollbar { display:none; }
+        .tags-scroll::-webkit-scrollbar { display:none; }
         .htab {
-            padding:6px 14px; border-radius:16px; font-size:13px; font-weight:500;
+            padding:5px 13px; border-radius:15px; font-size:12px;
             white-space:nowrap; cursor:pointer; flex-shrink:0; transition:all 0.15s;
             border:1px solid var(--border); color:var(--text-secondary); background:var(--white);
         }
-        .htab:active, .htab.active { background:var(--primary-light); border-color:var(--primary); color:var(--primary); }
-        .htab .count { font-weight:700; margin-left:2px; }
-        .htab.active .count { color:var(--primary-dark); }
-        .htab.first { background:var(--primary); border-color:var(--primary); color:#fff; font-weight:600; }
-        .htab.first:active, .htab.first.active { background:var(--primary-dark); color:#fff; }
+        .htab:active { background:var(--primary-light); border-color:var(--primary); color:var(--primary); }
 
         /* ======== Result Bar ======== */
         .result-bar {
@@ -188,18 +196,22 @@
             <div class="tool-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></div>
         </div>
 
-        <!-- Horizontal Tabs -->
-        <div class="tabs-scroll">
-            <span class="htab first active">我的客户</span>
-            <span class="htab">进行中 <span class="count">12</span></span>
-            <span class="htab">待跟进 <span class="count">11</span></span>
-            <span class="htab">待处理 <span class="count">8</span></span>
-            <span class="htab">测试</span>
+        <!-- Stats Cards -->
+        <div class="stats-row">
+            <div class="stat-card progress"><div class="stat-num">12</div><div class="stat-label">进行中</div></div>
+            <div class="stat-card follow"><div class="stat-num">11</div><div class="stat-label">待跟进</div></div>
+            <div class="stat-card pending"><div class="stat-num">8</div><div class="stat-label">待处理</div></div>
+        </div>
+
+        <!-- Saved Search Tags -->
+        <div class="tags-scroll">
+            <span class="htab">我的客户</span>
             <span class="htab">长沙</span>
             <span class="htab">广州·疑似记账代理</span>
             <span class="htab">广州·风险+沉默</span>
             <span class="htab">新建小巨人</span>
             <span class="htab">小蓝本1</span>
+            <span class="htab">测试</span>
         </div>
 
         <!-- Result -->
