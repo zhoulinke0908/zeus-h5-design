@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>客户管理 - Zeus</title>
+    <style>
+        :root {
+            --primary: #F19871;
+            --primary-dark: #E8865A;
+            --primary-light: #FFF0EA;
+            --text: #1D1D1F;
+            --text-secondary: #86868B;
+            --text-muted: #C7C7CC;
+            --border: #F0F0F2;
+            --bg: #F5F5F7;
+            --white: #fff;
+            --green: #34C759;
+            --blue: #4A90D9;
+            --orange: #F5A623;
+            --red: #FF3B30;
+            --purple: #7C6FF7;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%; min-height: 100vh; background: var(--bg);
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            -webkit-tap-highlight-color: transparent; -webkit-font-smoothing: antialiased; overflow-x: hidden;
+        }
+        .page {
+            width: 100%; max-width: 480px; margin: 0 auto;
+            min-height: 100vh; padding-bottom: 80px;
+            animation: pageIn 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        @keyframes pageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ======== Header ======== */
+        .top-bar {
+            background: var(--white);
+            padding: 12px 14px;
+            display: flex; align-items: center; gap: 10px;
+            position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+        }
+        .top-bar .title {
+            font-size: 17px; font-weight: 700; color: var(--text);
+            white-space: nowrap;
+        }
+        .search-wrap {
+            flex: 1; position: relative; min-width: 0;
+        }
+        .search-wrap input {
+            width: 100%; height: 36px;
+            padding: 0 14px 0 34px;
+            border: none; border-radius: 18px;
+            background: #F5F5F7;
+            font-size: 14px; color: var(--text);
+            outline: none; font-family: inherit;
+        }
+        .search-wrap input::placeholder { color: var(--text-muted); }
+        .search-icon {
+            position: absolute; left: 10px; top: 50%;
+            transform: translateY(-50%);
+            width: 16px; height: 16px; stroke: #C7C7CC; fill: none;
+            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+            pointer-events: none;
+        }
+        .icon-btn {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: #F5F5F7;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; cursor: pointer;
+        }
+        .icon-btn:active { background: #EBEBED; }
+        .icon-btn svg { width: 18px; height: 18px; stroke: var(--text-secondary); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        /* ======== Stats ======== */
+        .stats-row {
+            display: flex; gap: 10px;
+            padding: 12px 14px 6px;
+        }
+        .stat-card {
+            flex: 1; padding: 14px 12px;
+            border-radius: 14px; cursor: pointer;
+            transition: transform 0.15s;
+        }
+        .stat-card:active { transform: scale(0.96); }
+        .stat-card.progress { background: #FFF0EA; }
+        .stat-card.follow { background: #EBF5FF; }
+        .stat-card.pending { background: #F0ECFF; }
+        .stat-number {
+            font-size: 28px; font-weight: 700;
+        }
+        .stat-card.progress .stat-number { color: #F19871; }
+        .stat-card.follow .stat-number { color: #4A90D9; }
+        .stat-card.pending .stat-number { color: #7C6FF7; }
+        .stat-label {
+            font-size: 12px; color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* ======== Saved Search Tags ======== */
+        .tags-scroll {
+            padding: 0 14px 10px;
+            display: flex; gap: 8px;
+            overflow-x: auto; -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .tags-scroll::-webkit-scrollbar { display: none; }
+        .saved-tag {
+            padding: 6px 14px; border-radius: 16px;
+            font-size: 12px; color: var(--text-secondary);
+            background: var(--white); white-space: nowrap;
+            cursor: pointer; border: 1px solid var(--border);
+            transition: all 0.15s; flex-shrink: 0;
+        }
+        .saved-tag:active { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+
+        /* ======== Result Bar ======== */
+        .result-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 14px;
+        }
+        .result-count {
+            font-size: 12px; color: var(--text-secondary);
+        }
+        .result-count span { color: var(--primary); font-weight: 600; }
+        .sort-btn {
+            display: flex; align-items: center; gap: 4px;
+            font-size: 12px; color: var(--text-secondary); cursor: pointer;
+        }
+        .sort-btn svg { width: 14px; height: 14px; stroke: var(--text-secondary); fill: none; stroke-width: 2; }
+
+        /* ======== Customer Cards ======== */
+        .card-list { padding: 0 14px; }
+        .cus-card {
+            background: var(--white);
+            border-radius: 14px; padding: 16px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.03);
+            cursor: pointer; transition: box-shadow 0.2s;
+        }
+        .cus-card:active { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+
+        .cus-header {
+            display: flex; align-items: flex-start; justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .cus-name {
+            font-size: 16px; font-weight: 600; color: var(--text);
+            flex: 1; min-width: 0;
+        }
+        .cus-status {
+            padding: 3px 10px; border-radius: 10px;
+            font-size: 11px; font-weight: 600; white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .status-intent { background: #FFF0EA; color: #F19871; }
+        .status-new { background: #EBF5FF; color: #4A90D9; }
+
+        /* Company tags */
+        .company-tags {
+            display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px;
+        }
+        .ctag {
+            padding: 2px 8px; border-radius: 4px;
+            font-size: 10px; font-weight: 500;
+            background: #F5F5F7; color: var(--text-secondary);
+        }
+        .ctag.highlight { background: var(--primary-light); color: #F19871; }
+
+        /* Loan info */
+        .loan-row {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 10px; padding: 8px 12px;
+            background: #FFF8F5; border-radius: 8px;
+        }
+        .loan-amount {
+            font-size: 16px; font-weight: 700; color: #F19871;
+        }
+        .loan-detail {
+            font-size: 11px; color: var(--text-secondary);
+            flex: 1;
+        }
+        .loan-detail div + div { margin-top: 2px; }
+
+        /* Meta row */
+        .meta-row {
+            display: flex; flex-wrap: wrap; gap: 4px 12px;
+            font-size: 11px; color: var(--text-secondary);
+            margin-bottom: 8px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
+        }
+        .meta-item { display: flex; align-items: center; gap: 3px; }
+        .meta-dot { width: 4px; height: 4px; border-radius: 50%; }
+        .meta-dot.green { background: var(--green); }
+
+        /* Footer row */
+        .cus-footer {
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .follower {
+            font-size: 12px; color: var(--text-secondary);
+            display: flex; align-items: center; gap: 4px;
+        }
+        .follower-avatar {
+            width: 20px; height: 20px; border-radius: 50%;
+            background: var(--primary); color: #fff;
+            font-size: 10px; font-weight: 600;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .contact-btn {
+            padding: 6px 16px; border-radius: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff; font-size: 12px; font-weight: 600;
+            border: none; cursor: pointer; font-family: inherit;
+            transition: opacity 0.2s;
+        }
+        .contact-btn:active { opacity: 0.8; }
+
+        /* Follow-up hint */
+        .follow-hint {
+            display: inline-block;
+            font-size: 11px; color: #FF9500;
+            background: #FFF7E6; padding: 2px 8px;
+            border-radius: 8px;
+        }
+
+        /* ======== Tab Bar ======== */
+        .tab-bar {
+            position: fixed; bottom: 0; left: 0; right: 0; max-width: 480px; margin: 0 auto;
+            background: rgba(255,255,255,0.94);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: flex; border-top: 0.5px solid var(--border);
+            padding: 4px 0 env(safe-area-inset-bottom, 8px); z-index: 100;
+        }
+        .tab-item {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; gap: 2px; cursor: pointer; padding: 6px 0 2px;
+        }
+        .tab-item svg { width: 24px; height: 24px; stroke: #8E8E93; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .tab-item.active svg { stroke: var(--primary); }
+        .tab-label { font-size: 10px; color: #8E8E93; }
+        .tab-item.active .tab-label { color: var(--primary); }
+
+        @media (min-width: 480px) {
+            body { background: #ECECF0; }
+            .page { margin: 0 auto; min-height: auto; box-shadow: 0 12px 40px rgba(0,0,0,0.1); overflow: hidden; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="title">我的客户</div>
+            <div class="search-wrap">
+                <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="请输入姓名/企业全称">
+            </div>
+            <div class="icon-btn" id="btnFilter">
+                <svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            </div>
+            <div class="icon-btn">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-card progress">
+                <div class="stat-number">12</div>
+                <div class="stat-label">进行中</div>
+            </div>
+            <div class="stat-card follow">
+                <div class="stat-number">11</div>
+                <div class="stat-label">待跟进</div>
+            </div>
+            <div class="stat-card pending">
+                <div class="stat-number">8</div>
+                <div class="stat-label">待处理</div>
+            </div>
+        </div>
+
+        <!-- Saved Searches -->
+        <div class="tags-scroll">
+            <span class="saved-tag">长沙</span>
+            <span class="saved-tag">广州 · 疑似记账代理</span>
+            <span class="saved-tag">广州 · 风险+沉默</span>
+            <span class="saved-tag">新建小巨人</span>
+            <span class="saved-tag">小蓝本1</span>
+        </div>
+
+        <!-- Result -->
+        <div class="result-bar">
+            <div class="result-count">为您筛选到 <span>120,312</span> 条相关结果</div>
+            <div class="sort-btn">
+                默认排序
+                <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+        </div>
+
+        <!-- Customer Cards -->
+        <div class="card-list">
+            <!-- Card 1 -->
+            <div class="cus-card">
+                <div class="cus-header">
+                    <div class="cus-name">比亚迪汽车工业有限公司</div>
+                    <span class="cus-status status-intent">有意向</span>
+                </div>
+                <div class="company-tags">
+                    <span class="ctag">在营</span>
+                    <span class="ctag">KP联系人</span>
+                    <span class="ctag highlight">A级纳税人</span>
+                    <span class="ctag">一般纳税人</span>
+                    <span class="ctag highlight">高新企业</span>
+                    <span class="ctag">企业技术中心</span>
+                    <span class="ctag">规模以上工业</span>
+                </div>
+                <div class="loan-row">
+                    <div class="loan-amount">500万</div>
+                    <div class="loan-detail">
+                        <div>需求金额 · 抵押贷</div>
+                        <div>近一年纳税 8910万 · 近一年开票 500万</div>
+                    </div>
+                </div>
+                <div class="meta-row">
+                    <div class="meta-item"><div class="meta-dot green"></div>完全准入</div>
+                    <div class="meta-item">跟进中</div>
+                    <div class="meta-item">更新于 07-20 09:08</div>
+                    <span class="follow-hint">1天后跟进</span>
+                </div>
+                <div class="cus-footer">
+                    <div class="follower">
+                        <div class="follower-avatar">周</div>
+                        周林科
+                    </div>
+                    <button class="contact-btn">联系客户</button>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="cus-card">
+                <div class="cus-header">
+                    <div class="cus-name">华为技术有限公司</div>
+                    <span class="cus-status status-new">新入库</span>
+                </div>
+                <div class="company-tags">
+                    <span class="ctag">在营</span>
+                    <span class="ctag">KP联系人</span>
+                    <span class="ctag highlight">A级纳税人</span>
+                    <span class="ctag">一般纳税人</span>
+                    <span class="ctag highlight">高新企业</span>
+                    <span class="ctag highlight">500强企业</span>
+                    <span class="ctag">企业技术中心</span>
+                </div>
+                <div class="meta-row">
+                    <div class="meta-item"><div class="meta-dot green"></div>完全准入</div>
+                    <div class="meta-item">跟进中 · 抵押贷</div>
+                    <div class="meta-item">更新于 07-10 17:26</div>
+                    <span class="follow-hint">去跟进</span>
+                </div>
+                <div class="cus-footer">
+                    <div class="follower">
+                        <div class="follower-avatar">周</div>
+                        周林科
+                    </div>
+                    <button class="contact-btn">联系客户</button>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="cus-card">
+                <div class="cus-header">
+                    <div class="cus-name">深圳市晨北科技有限公司</div>
+                    <span class="cus-status status-new">新入库</span>
+                </div>
+                <div class="company-tags">
+                    <span class="ctag">在营</span>
+                    <span class="ctag">KP联系人</span>
+                    <span class="ctag highlight">A级纳税人</span>
+                    <span class="ctag">一般纳税人</span>
+                    <span class="ctag highlight">高新企业</span>
+                    <span class="ctag">IPO</span>
+                </div>
+                <div class="loan-row">
+                    <div class="loan-amount">500万</div>
+                    <div class="loan-detail">
+                        <div>需求金额 · 信用贷/抵押贷/税票贷</div>
+                    </div>
+                </div>
+                <div class="meta-row">
+                    <div class="meta-item"><div class="meta-dot green"></div>完全准入</div>
+                    <div class="meta-item">跟进中</div>
+                    <div class="meta-item">更新于 07-10 15:21</div>
+                    <span class="follow-hint">去跟进</span>
+                </div>
+                <div class="cus-footer">
+                    <div class="follower">
+                        <div class="follower-avatar">周</div>
+                        周林科
+                    </div>
+                    <button class="contact-btn">联系客户</button>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="cus-card">
+                <div class="cus-header">
+                    <div class="cus-name">深圳晶泰科技有限公司</div>
+                    <span class="cus-status status-new">新入库</span>
+                </div>
+                <div class="company-tags">
+                    <span class="ctag highlight">专精特新</span>
+                    <span class="ctag">小微企业</span>
+                    <span class="ctag">科技型中小企业</span>
+                    <span class="ctag highlight">独角兽</span>
+                    <span class="ctag highlight">高新企业</span>
+                </div>
+                <div class="meta-row">
+                    <div class="meta-item"><div class="meta-dot green"></div>完全准入</div>
+                    <div class="meta-item">跟进中</div>
+                    <div class="meta-item">更新于 07-10 14:19</div>
+                    <span class="follow-hint">去跟进</span>
+                </div>
+                <div class="cus-footer">
+                    <div class="follower">
+                        <div class="follower-avatar">周</div>
+                        周林科
+                    </div>
+                    <button class="contact-btn">联系客户</button>
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="cus-card">
+                <div class="cus-header">
+                    <div class="cus-name">深圳市大疆创新科技有限公司</div>
+                    <span class="cus-status status-new">新入库</span>
+                </div>
+                <div class="company-tags">
+                    <span class="ctag">在营</span>
+                    <span class="ctag">KP联系人</span>
+                    <span class="ctag highlight">A级纳税人</span>
+                    <span class="ctag highlight">独角兽企业</span>
+                    <span class="ctag highlight">瞪羚企业</span>
+                    <span class="ctag highlight">高新企业</span>
+                    <span class="ctag highlight">500强企业</span>
+                </div>
+                <div class="loan-row">
+                    <div class="loan-amount">500万</div>
+                    <div class="loan-detail">
+                        <div>需求金额 · 抵押贷/信用贷/税票贷</div>
+                    </div>
+                </div>
+                <div class="meta-row">
+                    <div class="meta-item"><div class="meta-dot green"></div>完全准入</div>
+                    <div class="meta-item">跟进中</div>
+                    <div class="meta-item">更新于 07-10 14:02</div>
+                    <span class="follow-hint">去跟进</span>
+                </div>
+                <div class="cus-footer">
+                    <div class="follower">
+                        <div class="follower-avatar">周</div>
+                        周林科
+                    </div>
+                    <button class="contact-btn">联系客户</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Bar -->
+        <nav class="tab-bar">
+            <div class="tab-item"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="tab-label">首页</span></div>
+            <div class="tab-item active"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-3-3.87"/><circle cx="12" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="18" cy="7" r="4"/></svg><span class="tab-label">客户管理</span></div>
+            <div class="tab-item"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span class="tab-label">拓客空间</span></div>
+            <div class="tab-item"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><span class="tab-label">产品管理</span></div>
+            <div class="tab-item"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="tab-label">我的</span></div>
+        </nav>
+    </div>
+
+    <script>
+    document.querySelectorAll('.cus-card, .stat-card, .saved-tag, .tab-item').forEach(function(el) {
+        el.addEventListener('click', function() {
+            if (this.classList.contains('tab-item')) {
+                document.querySelectorAll('.tab-item').forEach(function(t) { t.classList.remove('active'); });
+                this.classList.add('active');
+            }
+        });
+    });
+    console.log('Zeus 客户管理 已就绪');
+    </script>
+</body>
+</html>
